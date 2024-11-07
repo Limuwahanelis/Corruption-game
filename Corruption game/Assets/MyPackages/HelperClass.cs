@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class HelperClass : MonoBehaviour
 {
+    public static Vector3 MousePos => _mousePos;
+    private static Vector2 _mousePos;
+    public static void SetMousePos(Vector2 pos)
+    {
+        _mousePos = pos;
+    }
     public static IEnumerator DelayedFunction(float timeToWait, Action function)
     {
         yield return new WaitForSeconds(timeToWait);
