@@ -24,6 +24,7 @@ public class RaycastFromCamera : MonoBehaviour
         point = Vector3.zero;
         width = 0;
         Ray ray = _cam.ScreenPointToRay(HelperClass.MousePos);
+        Logger.Log(ray.origin);
         point=ray.origin;
 
         return Physics2D.OverlapPoint(ray.origin, _mask);

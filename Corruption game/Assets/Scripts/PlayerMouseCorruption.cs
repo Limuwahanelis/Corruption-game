@@ -22,6 +22,7 @@ public class PlayerMouseCorruption : MonoBehaviour
         {
             _corruptable = col.GetComponent<IMouseCorruptable>();
         }
+        else _corruptable = null;
        
         if (_corruptable!=null)
         {
