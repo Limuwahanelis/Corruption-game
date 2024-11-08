@@ -5,12 +5,19 @@ using UnityEngine.EventSystems;
 
 public class RaycastFromCamera : MonoBehaviour
 {
+
+    public static Vector3 CameraInWorldPos=>_cameraInWorldPos;
     [SerializeField] LayerMask _mask;
-    Camera _cam;
+    private Camera _cam;
+    private static Vector3 _cameraInWorldPos;
     // Start is called before the first frame update
     void Start()
     {
         _cam=Camera.main;
+    }
+    private void Update()
+    {
+        _cameraInWorldPos= _cam.ScreenPointToRay(HelperClass.MousePos).origin;
     }
     public Collider2D Raycast(out Vector3 point,out float width)
     {

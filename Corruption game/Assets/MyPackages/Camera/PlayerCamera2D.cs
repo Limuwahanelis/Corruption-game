@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class PlayerCamera2D : MonoBehaviour
 {
-    [SerializeField] Transform _transformToFollow;
+    public Vector3 PositionToFollow=>_positionToFollow;
     [SerializeField] Vector3 offset;
-
-
     [SerializeField] bool CheckForBorders = true;
     [SerializeField] Transform leftScreenBorder;
     [SerializeField] Transform rightScreenBorder;
@@ -18,32 +16,33 @@ public class PlayerCamera2D : MonoBehaviour
 
     private bool _followOnXAxis=true;
     private bool _followOnYAxis = true;
+    private Vector3 _positionToFollow;
     private Vector3 _targetPos;
-    
     private Vector3 _velocity = Vector3.zero;
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = _transformToFollow.position+offset;
+        transform.position = _positionToFollow + offset;
     }
-    private void Update()
+    public void SetPositionToFollowRaw(Vector3 pos)
     {
+        _positionToFollow = pos;
         if (CheckForBorders)
         {
-            if (_transformToFollow.position.x < leftScreenBorder.position.x)
+            if (_positionToFollow.x < leftScreenBorder.position.x)
             {
                 _followOnXAxis = false;
-                _targetPos = new Vector3(leftScreenBorder.position.x, _transformToFollow.position.y);
+                _positionToFollow = new Vector3(leftScreenBorder.position.x, _positionToFollow.y);
             }
             else
             {
                 CheckIfPlayerIsOnRightScreenBorder();
             }
 
-            if (_transformToFollow.position.y < lowerScreenBorder.position.y)
+            if (_positionToFollow.y < lowerScreenBorder.position.y)
             {
                 _followOnYAxis = false;
-                _targetPos = new Vector3(_targetPos.x, lowerScreenBorder.position.y, _targetPos.z);
+                _positionToFollow = new Vector3(_positionToFollow.x, lowerScreenBorder.position.y, _positionToFollow.z);
 
             }
             else
@@ -51,7 +50,37 @@ public class PlayerCamera2D : MonoBehaviour
                 CheckIfPlayerIsOnUpperScreenBorder();
             }
         }
-        
+        _targetPos = _positionToFollow;
+        _targetPos += offset;
+        transform.position = _targetPos;
+    }
+    public void SetPositionToFollow(Vector3 pos)
+    {
+        _positionToFollow = pos;
+        if (CheckForBorders)
+        {
+            if (_positionToFollow.x < leftScreenBorder.position.x)
+            {
+                _followOnXAxis = false;
+                _positionToFollow = new Vector3(leftScreenBorder.position.x, _positionToFollow.y);
+            }
+            else
+            {
+                CheckIfPlayerIsOnRightScreenBorder();
+            }
+
+            if (_positionToFollow.y < lowerScreenBorder.position.y)
+            {
+                _followOnYAxis = false;
+                _positionToFollow = new Vector3(_positionToFollow.x, lowerScreenBorder.position.y, _positionToFollow.z);
+
+            }
+            else
+            {
+                CheckIfPlayerIsOnUpperScreenBorder();
+            }
+        }
+
     }
     private void FixedUpdate()
     {
@@ -59,27 +88,27 @@ public class PlayerCamera2D : MonoBehaviour
         {
             if (_followOnXAxis)
             {
-                _targetPos = new Vector3(_transformToFollow.position.x, _targetPos.y);
+                _targetPos = new Vector3(_positionToFollow.x, _targetPos.y);
             }
             if (_followOnYAxis)
             {
-                _targetPos = new Vector3(_targetPos.x, _transformToFollow.position.y);
+                _targetPos = new Vector3(_targetPos.x, _positionToFollow.y);
             }
         }
         else
         {
-            _targetPos = _transformToFollow.position;
+            _targetPos = _positionToFollow;
         }
-            _targetPos += offset;
-            transform.position = Vector3.SmoothDamp(transform.position, _targetPos, ref _velocity, smoothTime);
+        _targetPos += offset;
+        transform.position = Vector3.SmoothDamp(transform.position, _targetPos, ref _velocity, smoothTime);
     }
 
     private void CheckIfPlayerIsOnRightScreenBorder()
     {
-        if (_transformToFollow.position.x > rightScreenBorder.position.x)
+        if (_positionToFollow.x > rightScreenBorder.position.x)
         {
             _followOnXAxis = false;
-            _targetPos = new Vector3(rightScreenBorder.position.x, _transformToFollow.position.y);
+            _positionToFollow = new Vector3(rightScreenBorder.position.x, _positionToFollow.y);
         }
         else
         {
@@ -88,10 +117,10 @@ public class PlayerCamera2D : MonoBehaviour
     }
     private void CheckIfPlayerIsOnUpperScreenBorder()
     {
-        if (_transformToFollow.position.y > upperScreenBorder.position.y)
+        if (_positionToFollow.y > upperScreenBorder.position.y)
         {
             _followOnYAxis = false;
-            _targetPos = new Vector3(_targetPos.x, upperScreenBorder.position.y,_targetPos.z);
+            _positionToFollow = new Vector3(_positionToFollow.x, upperScreenBorder.position.y, _positionToFollow.z);
         }
         else
         {
