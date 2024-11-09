@@ -8,14 +8,16 @@ using UnityEngine.EventSystems;
 
 public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
 {
-    public UnityEvent OnCorrupted;
-    public UnityEvent OnUnCorrupted;
+    public bool IsCorrupted => _isCorrupted;
+    public UnityEvent<CorruptionComponent> OnCorrupted;
+    public UnityEvent<CorruptionComponent> OnUnCorrupted;
+
     [SerializeField] HealthBar _corruptionBar;
     [SerializeField] int _maxCorruption;
     [SerializeField] int _corruptionDecrease;
     [SerializeField] float _corrutptionReduceInterval;
     private int _corruptionProgress;
-    private bool _isCorrupted;
+    [SerializeField]private bool _isCorrupted;
     private float _timer;
     private void Start()
     {
@@ -30,7 +32,7 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
             if (!_isCorrupted)
             {
                 _isCorrupted = true;
-                OnCorrupted?.Invoke();
+                OnCorrupted?.Invoke(this);
             }
         }
         _corruptionProgress = math.clamp(_corruptionProgress, 0, _maxCorruption);

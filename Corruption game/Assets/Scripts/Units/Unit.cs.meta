@@ -3,7 +3,12 @@ guid: 6cd04616c4f7d2a45a23f480ceae2b01
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _healthSystem: {instanceID: 0}
+  - _unitData: {instanceID: 0}
+  - _factionAllegiance: {instanceID: 0}
+  - _corruptionAllegiance: {fileID: 11400000, guid: 5132679fb90c86a45a791bc3033a454b, type: 2}
+  - _originalTarget: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

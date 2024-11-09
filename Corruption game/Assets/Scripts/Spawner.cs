@@ -9,6 +9,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] List<Transform> _spawnTran;
     [SerializeField] List<UnitData> _unitsToSpawn;
     [SerializeField] List<int> _spawnNumber;
+    [SerializeField] Transform _unitsOriginaltarget;
     private float _time = 0;
     public void Spawn()
     {
@@ -19,7 +20,9 @@ public class Spawner : MonoBehaviour
             int _poolIndex = _poolsList.Pools.FindIndex(x => x.SpawnUnitData == _unitsToSpawn[i]);
             for (int j=0;j<_spawnNumber[i];j++) 
             {
-                _poolsList.Pools[_poolIndex].GetUnit().transform.position = _spawnTran[_spawnIndex].position;
+                Unit unit = _poolsList.Pools[_poolIndex].GetUnit();
+                unit.transform.position = _spawnTran[_spawnIndex].position;
+                unit.SetOriginaltarget(_unitsOriginaltarget);
                 _spawnIndex++;
                 if (_spawnIndex >= _spawnTran.Count)
                 {
