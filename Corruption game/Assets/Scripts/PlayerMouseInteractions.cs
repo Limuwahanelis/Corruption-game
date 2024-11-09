@@ -6,14 +6,23 @@ public class PlayerMouseInteractions : MonoBehaviour
 {
     [SerializeField] RaycastFromCamera _cameraRaycast;
     [SerializeField] MouseCorruptionSpriteSpawner _corruptionSpriteSpawner;
-   // [SerializeField] GameObject _productsMenu;
     private IMouseInteractable _interactable;
+    private IMouseInteractable _selectedInteractable;
     private bool _closeProductsMenu=true;
     private Vector3 _productsMenuPos;
     private bool _canInteract=true;
     public void SetInteraction(bool value)
     {
         _canInteract= value;
+    }
+    public void TryRMBPress()
+    {
+        if (PauseSettings.IsGamePaused) return;
+        if (_selectedInteractable == null) return;
+        Vector3 point;
+        Collider2D col = _cameraRaycast.Raycast(out point, out float width);
+        if(col == null) return;
+        _selectedInteractable.RBMPress(col.attachedRigidbody.transform,col.attachedRigidbody.GetComponent<CorruptionComponent>().IsCorrupted);
     }
     public void TryPress()
     {
@@ -23,22 +32,26 @@ public class PlayerMouseInteractions : MonoBehaviour
         Collider2D col = _cameraRaycast.Raycast(out point, out float width);
             if(col)
         {
-            _interactable = GetComponent<IMouseInteractable>();
+            _interactable = col.attachedRigidbody.GetComponent<IMouseInteractable>();
         }
         
-       // _productsMenuPos = point;
         if (_interactable==null)
         {
-            if(_closeProductsMenu)
-            {
-               // _productsMenu.SetActive(false);
-            }
+            if(_selectedInteractable==null) return;
+            _selectedInteractable.Deselect();
+            _selectedInteractable = null;
         }
         else
         {
+            if (_selectedInteractable != null)
+            {
+                if (_interactable != _selectedInteractable)
+                {
+                    _selectedInteractable.Deselect();
+                }
+            }
             _interactable.Interact();
-          //  _productsMenuPos.x -= width;
-           // _productsMenu.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(_productsMenuPos);
+            _selectedInteractable = _interactable;
         }
         _corruptionSpriteSpawner.SpawnSprite().transform.position = point;
     }

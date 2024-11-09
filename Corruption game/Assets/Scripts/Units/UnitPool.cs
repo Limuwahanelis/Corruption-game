@@ -14,10 +14,11 @@ public class UnitPool : MonoBehaviour
     void Awake()
     {
         _unitPool = new ObjectPool<Unit>(CrateUnit, OnTakeUnitFromPool, OnReturnUnitToPool);
+        _poolsList.AddPoolToList(this);
     }
     private void Start()
     {
-        _poolsList.AddPoolToList(this);
+       
     }
     public Unit GetUnit()
     {
@@ -30,9 +31,9 @@ public class UnitPool : MonoBehaviour
         return unit;
 
     }
-    public void OnTakeUnitFromPool(Unit powerUp)
+    public void OnTakeUnitFromPool(Unit unit)
     {
-        powerUp.gameObject.SetActive(true);
+        unit.gameObject.SetActive(true);
     }
     public void OnReturnUnitToPool(Unit powerUp)
     {

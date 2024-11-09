@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IMouseInteractable
 {
-    public Transform Transform { get; set; }
     void Interact();
+    void Deselect();
+    void RBMPress(Transform tran,bool isCorrupted);
 }

@@ -8,6 +8,7 @@ public class Monster : Unit
     [SerializeField] TargetDetector _detector;
     [SerializeField] Transform _mainBody;
     [SerializeField] float _rangeFromTarget;
+    
     private float _timer;
     
     private void Start()
@@ -17,7 +18,7 @@ public class Monster : Unit
     }
     private void Update()
     {
-        if (_target == null)
+        if (_target == null || _target.tran==null)
         {
             if (Vector2.Distance(_mainBody.position, _originalTarget.position) > _rangeFromTarget)
             {
@@ -26,7 +27,6 @@ public class Monster : Unit
         }
         else
         {
-            Logger.Log(Vector2.Distance(_mainBody.position, _target.tran.position));
             if (Vector2.Distance(_mainBody.position, _target.tran.position) > _rangeFromTarget)
             {
                 _mainBody.Translate((_target.tran.position - _mainBody.position).normalized * _unitData.Speed * Time.deltaTime);
@@ -44,6 +44,7 @@ public class Monster : Unit
     }
     public void SetTarget(TargetDetector.Target target)
     {
+        if (_target != null) return;
         _target = target;
         if (_target == null) return;
         if (_target.corruptionComponent) _target.corruptionComponent.OnCorrupted.AddListener(OnTargetCorrupted);
@@ -52,21 +53,24 @@ public class Monster : Unit
     private void OnTargetCorrupted(CorruptionComponent corruptionComponent)
     {
         corruptionComponent.GetComponent<Unit>().SetOriginaltarget(_originalTarget);
+        if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
-        SetTarget(_detector.GetClosestTarget(_mainBody));
-        corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
+        _target = null;
         UpdateTargets();
     }
     private void OnTargetDestroyed(IDamagable damagable)
     {
+
         if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
+        if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
+        _target = null;
         SetTarget(_detector.GetClosestTarget(_mainBody));
-        damagable.OnDeath-=OnTargetDestroyed;
     }
     private void OnCorrupted(CorruptionComponent corruption)
     {
         _healthSystem.Heal((int)(_healthSystem.MaxHP * 0.3f));
-        SetTarget(_detector.GetClosestTarget(_mainBody));
+        _spriteColor.ChangeColor(_corruptionColor.Color);
+        UpdateTargets();
     }
     private void UpdateTargets()
     {
@@ -76,5 +80,10 @@ public class Monster : Unit
     private void OnDestroy()
     {
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
+    }
+
+    public override void ResetUnit()
+    {
+        throw new System.NotImplementedException();
     }
 }

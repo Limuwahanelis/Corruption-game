@@ -6,6 +6,7 @@ public class PlayerMouseCorruption : MonoBehaviour
 {
     [SerializeField] int _corruptionPerClick;
     [SerializeField] RaycastFromCamera _cameraRaycast;
+    
     private IMouseCorruptable _corruptable;
     private bool _canInteract=true;
     public void SetInteraction(bool value)
@@ -20,7 +21,7 @@ public class PlayerMouseCorruption : MonoBehaviour
         Collider2D col = _cameraRaycast.Raycast(out point, out float width);
         if(col)
         {
-            _corruptable = col.GetComponent<IMouseCorruptable>();
+            _corruptable = col.attachedRigidbody.GetComponent<IMouseCorruptable>();
         }
         else _corruptable = null;
        
