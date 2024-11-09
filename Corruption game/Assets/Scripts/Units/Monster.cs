@@ -8,13 +8,12 @@ public class Monster : Unit
     [SerializeField] TargetDetector _detector;
     [SerializeField] float _rangeFromTarget;
     [SerializeField] Transform _mainBody;
-    [SerializeField] float _speed;
     private float _timer;
     
     private void Start()
     {
         _detector.OnTargetDetected.AddListener(SetTarget);
-        _corruptionComponent.OnCorrupted.AddListener(UpdateTargets);
+        _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
     }
     private void Update()
     {
@@ -22,7 +21,7 @@ public class Monster : Unit
         {
             if (Vector2.Distance(_mainBody.position, _originalTarget.position) > _rangeFromTarget)
             {
-                _mainBody.Translate((_originalTarget.position - _mainBody.position).normalized * _speed * Time.deltaTime);
+                _mainBody.Translate((_originalTarget.position - _mainBody.position).normalized * _unitData.Speed * Time.deltaTime);
             }
         }
         else
@@ -30,7 +29,7 @@ public class Monster : Unit
             Logger.Log(Vector2.Distance(_mainBody.position, _target.tran.position));
             if (Vector2.Distance(_mainBody.position, _target.tran.position) > _rangeFromTarget)
             {
-                _mainBody.Translate((_target.tran.position - _mainBody.position).normalized * _speed * Time.deltaTime);
+                _mainBody.Translate((_target.tran.position - _mainBody.position).normalized * _unitData.Speed * Time.deltaTime);
             }
             else
             {
@@ -64,8 +63,9 @@ public class Monster : Unit
         SetTarget(_detector.GetClosestTarget(_mainBody));
         damagable.OnDeath-=OnTargetDestroyed;
     }
-    private void UpdateTargets(CorruptionComponent corruption)
+    private void OnCorrupted(CorruptionComponent corruption)
     {
+        _healthSystem.Heal((int)(_healthSystem.MaxHP * 0.3f));
         SetTarget(_detector.GetClosestTarget(_mainBody));
     }
     private void UpdateTargets()
@@ -75,6 +75,6 @@ public class Monster : Unit
     }
     private void OnDestroy()
     {
-        _corruptionComponent.OnCorrupted.RemoveListener(UpdateTargets);
+        _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
     }
 }

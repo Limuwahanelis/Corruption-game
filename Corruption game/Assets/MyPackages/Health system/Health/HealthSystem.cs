@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using static PlayerHealthSystem;
@@ -30,6 +31,12 @@ public class HealthSystem : MonoBehaviour,IDamagable
 
         if(_hpBar!=null)_hpBar.SetMaxHealth(_maxHP);
         _currentHP = _maxHP;
+        if (_hpBar != null) _hpBar.SetHealth(_currentHP);
+    }
+    public void Heal(int amount)
+    {
+        _currentHP += amount;
+        _currentHP = math.clamp(_currentHP, 0, _maxHP);
         if (_hpBar != null) _hpBar.SetHealth(_currentHP);
     }
     public virtual void TakeDamage(DamageInfo info)

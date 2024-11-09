@@ -9,6 +9,7 @@ public class UnitData : ScriptableObject
     public int Damage => _damage;
     public int CorruptionForce => _baseCorruptionForce;
     public float AttackInterval => _attackInterval;
+    public float Speed => _speed;
     public Allegiance OriginalAllegiance=>_startingAllegiance;
     [SerializeField] Unit _unitPrefab;
     [SerializeField] int _damage;
