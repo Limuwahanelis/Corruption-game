@@ -21,8 +21,9 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
     private float _timer;
     private void Start()
     {
-        _corruptionBar.SetHealth(0);
         _corruptionBar.SetMaxHealth(_maxCorruption);
+        _corruptionBar.SetHealth(0);
+        if (_isCorrupted) _corruptionBar.SetHealth(_maxCorruption);
     }
     public void IncreseCorruption(int value)
     {

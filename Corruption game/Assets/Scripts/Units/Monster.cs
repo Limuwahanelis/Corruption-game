@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Monster : Unit
 {
-    
+    [Header("Monster")]
     [SerializeField] TargetDetector _detector;
-    [SerializeField] float _rangeFromTarget;
     [SerializeField] Transform _mainBody;
+    [SerializeField] float _rangeFromTarget;
     private float _timer;
     
     private void Start()

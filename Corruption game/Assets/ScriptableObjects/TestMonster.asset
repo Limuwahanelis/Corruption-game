@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _unitPrefab: {fileID: 699504403497554751, guid: 8b789ce22dc6d774bad33de14fb15bcc, type: 3}
   _damage: 4
-  _speed: 0
+  _speed: 2
   _attackInterval: 1
   _baseCorruptionForce: 8
   _startingAllegiance: {fileID: 11400000, guid: bf14736a69e48ec46991e89799af7a45, type: 2}
