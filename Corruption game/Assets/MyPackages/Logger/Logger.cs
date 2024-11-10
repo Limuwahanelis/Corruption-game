@@ -14,10 +14,13 @@ public static class Logger
     {
         Debug.Log(message,context);
     }
-
     public static void Warning(object message)
     {
         Debug.LogWarning(message);
+    }
+    public static void Warning(object message, Object context)
+    {
+        Debug.LogWarning(message,context);
     }
 
     public static void Error(object message) 

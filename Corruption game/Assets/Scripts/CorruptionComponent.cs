@@ -21,9 +21,13 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
     private float _timer;
     private void Start()
     {
-        _corruptionBar.SetMaxHealth(_maxCorruption);
-        _corruptionBar.SetHealth(0);
-        if (_isCorrupted) _corruptionBar.SetHealth(_maxCorruption);
+       if(_corruptionBar) _corruptionBar.SetMaxHealth(_maxCorruption);
+        if (_corruptionBar) _corruptionBar.SetHealth(0);
+        if (_isCorrupted)
+        {
+            OnCorrupted?.Invoke(this);
+            if (_corruptionBar) _corruptionBar.SetHealth(_maxCorruption);
+        }
     }
     public void IncreseCorruption(int value)
     {
@@ -37,7 +41,25 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
             }
         }
         _corruptionProgress = math.clamp(_corruptionProgress, 0, _maxCorruption);
-        _corruptionBar.SetHealth(_corruptionProgress);
+        if (_corruptionBar) _corruptionBar.SetHealth(_corruptionProgress);
+    }
+    public void ForceCorrupt()
+    {
+        _isCorrupted = true;
+        if (_corruptionBar) _corruptionBar.SetMaxHealth(_maxCorruption);
+        if (_corruptionBar) _corruptionBar.SetHealth(_maxCorruption);
+        OnCorrupted?.Invoke(this);
+    }
+    public void ResetCorruption()
+    {
+        _isCorrupted = false;
+        if (_corruptionBar) _corruptionBar.SetMaxHealth(_maxCorruption);
+        if (_corruptionBar) _corruptionBar.SetHealth(0);
+        if (_isCorrupted)
+        {
+            OnCorrupted?.Invoke(this);
+            if (_corruptionBar) _corruptionBar.SetHealth(_maxCorruption);
+        }
     }
     // Update is called once per frame
     void Update()
@@ -49,7 +71,7 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
             {
                 _corruptionProgress -= _corruptionDecrease;
                 _corruptionProgress = math.clamp(_corruptionProgress, 0, _maxCorruption);
-                _corruptionBar.SetHealth(_corruptionProgress);
+                if (_corruptionBar) _corruptionBar.SetHealth(_corruptionProgress);
                 _timer =0;
             }
 

@@ -26,4 +26,8 @@ public class PlayerInputHandler : MonoBehaviour
     {
         _pauseSetter.SetPause(!PauseSettings.IsGamePaused);
     }
+    public void OnRMB()
+    {
+        _mouseInteractions.TryRMBPress();
+    }
 }

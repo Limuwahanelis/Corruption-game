@@ -15,6 +15,7 @@ public class TargetDetector : MonoBehaviour
         public CorruptionComponent corruptionComponent;
         public IDamagable damagable;
         public FactionAllegiance factionAllegiance;
+        public string name;
         private DamageInfo dmgInfo = new DamageInfo();
         public void DealDamage(int damage,int corruptionForce,Vector3 position)
         {
@@ -39,6 +40,7 @@ public class TargetDetector : MonoBehaviour
             tran = collision.transform,
             corruptionComponent = tmp2,
             damagable = tmp,
+            name=collision.attachedRigidbody.name,
         };
         if(factionAllegiance != null)
         {
