@@ -7,6 +7,8 @@ public abstract class Unit : MonoBehaviour
 {
     public HealthSystem HealthSystem=>_healthSystem;
     public Allegiance Allegiance => _allegiance;
+    
+    [SerializeField] Transform _testOriginalTarget;
     [SerializeField] protected UnitData _unitData;
     [SerializeField] protected MyColor _corruptionColor;
     [Header("Components")]
@@ -14,7 +16,7 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] protected FactionAllegiance _factionAllegiance;
     [SerializeField] protected CorruptionComponent _corruptionComponent;
     [SerializeField] Allegiance _corruptionAllegiance;
-    [SerializeField]protected Transform _originalTarget;
+    [SerializeField] protected TargetDetector.Target _originalTarget;
     [SerializeField] protected SpriteColor _spriteColor;
     protected Allegiance _allegiance;
     protected IObjectPool<Unit> _pool;
@@ -39,9 +41,14 @@ public abstract class Unit : MonoBehaviour
         _healthSystem.OnDeath -= Death;
     }
     public void SetPool(IObjectPool<Unit> pool) => _pool = pool;
-    public void SetOriginaltarget(Transform target)
+    public virtual void SetOriginaltarget(Transform target,IDamagable damagable, CorruptionComponent corruption)
     {
-        _originalTarget = target;
+        _originalTarget = new TargetDetector.Target()
+        {
+            tran = target,
+            damagable = damagable,
+            corruptionComponent = corruption,
+        };
     }
     public void SetAllegiance(Allegiance allegiance)
     {

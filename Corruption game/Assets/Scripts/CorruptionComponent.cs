@@ -48,6 +48,10 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
         _corruptionProgress = math.clamp(_corruptionProgress, 0, _maxCorruption);
         if (_corruptionBar) _corruptionBar.SetHealth(_corruptionProgress);
     }
+    public void SetTechnologyPointsvalue(int value)
+    {
+        _technologyPointValue = value;
+    }
     public void ForceCorrupt()
     {
         _isCorrupted = true;

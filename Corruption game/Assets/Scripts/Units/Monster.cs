@@ -8,6 +8,7 @@ public class Monster : Unit
     [SerializeField] TargetDetector _detector;
     [SerializeField] Transform _mainBody;
     [SerializeField] float _rangeFromTarget;
+    [SerializeField] ListOfSpawners _spawnersList;
     
     private float _timer;
     public override void SetUp()
@@ -21,9 +22,13 @@ public class Monster : Unit
     {
         if (_target == null || _target.tran==null)
         {
-            if (Vector2.Distance(_mainBody.position, _originalTarget.position) > _rangeFromTarget)
+            if (Vector2.Distance(_mainBody.position, _originalTarget.tran.position) > _rangeFromTarget)
             {
-                _mainBody.Translate((_originalTarget.position - _mainBody.position).normalized * _unitData.Speed * Time.deltaTime);
+                _mainBody.Translate((_originalTarget.tran.position - _mainBody.position).normalized * _unitData.Speed * Time.deltaTime);
+            }
+            else
+            {
+                _originalTarget.DealDamage(_corruptionComponent.IsCorrupted?0:_unitData.Damage,_corruptionComponent.IsCorrupted?_unitData.CorruptionForce:0,_mainBody.position);
             }
         }
         else
@@ -43,6 +48,38 @@ public class Monster : Unit
             }
         }
     }
+    public override void SetOriginaltarget(Transform target, IDamagable damagable, CorruptionComponent corruption)
+    {
+        base.SetOriginaltarget(target, damagable, corruption);
+        if (corruption != null) corruption.OnCorrupted.AddListener(GetNewOriginaltarget);
+    }
+    private void GetNewOriginaltarget(CorruptionComponent corruption)
+    {
+        corruption.OnCorrupted.RemoveListener(GetNewOriginaltarget);
+        List<Spawner> spawners = _spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance);
+        if (spawners != null && spawners.Count > 0)
+        {
+            Spawner closestSpawner = spawners[0];
+            float shortestDist = Vector3.Distance(transform.position, closestSpawner.transform.position);
+            for (int i = 1; i < spawners.Count; i++)
+            {
+                float dist = Vector3.Distance(spawners[i].transform.position, transform.position);
+                if (dist < shortestDist)
+                {
+                    closestSpawner = spawners[i];
+                    shortestDist = dist;
+                }
+            }
+            _originalTarget = new TargetDetector.Target()
+            {
+                tran = closestSpawner.transform,
+                corruptionComponent = closestSpawner.GetComponent<CorruptionComponent>(),
+                damagable = closestSpawner.GetComponent<IDamagable>(),
+            };
+        }
+        else Logger.Error("NO MORE SPAWNERS TO ATTACK");
+        // TODO: Do smth when no more spanwers to attack.
+    }
     public void SetTarget(TargetDetector.Target target)
     {
         if (_target != null)
@@ -56,7 +93,7 @@ public class Monster : Unit
     }
     private void OnTargetCorrupted(CorruptionComponent corruptionComponent)
     {
-        corruptionComponent.GetComponent<Unit>().SetOriginaltarget(_originalTarget);
+        corruptionComponent.GetComponent<Unit>().SetOriginaltarget(_originalTarget.tran,_originalTarget.damagable,_originalTarget.corruptionComponent);
         if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
         _target = null;

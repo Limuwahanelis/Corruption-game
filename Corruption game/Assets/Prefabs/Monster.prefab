@@ -316,17 +316,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4565d864e17665b49834e0e22a8d2e6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _testOriginalTarget: {fileID: 0}
   _unitData: {fileID: 11400000, guid: 58c5b0a689c21bc4f85077752191b409, type: 2}
   _corruptionColor: {fileID: 11400000, guid: 1348533493c178d4c9d96fd238d8e860, type: 2}
   _healthSystem: {fileID: 1014495918979825475}
   _factionAllegiance: {fileID: 2956688686395390020}
   _corruptionComponent: {fileID: 4190207665059557518}
   _corruptionAllegiance: {fileID: 11400000, guid: 5132679fb90c86a45a791bc3033a454b, type: 2}
-  _originalTarget: {fileID: 0}
+  _originalTarget:
+    tran: {fileID: 0}
+    corruptionComponent: {fileID: 0}
+    factionAllegiance: {fileID: 0}
+    name: 
   _spriteColor: {fileID: 4037608689312361046}
   _detector: {fileID: 2762296266781645361}
   _mainBody: {fileID: 3430786072956781645}
   _rangeFromTarget: 2
+  _spawnersList: {fileID: 11400000, guid: 01e984d2dc84d9441939255bfc7881db, type: 2}
 --- !u!114 &1014495918979825475
 MonoBehaviour:
   m_ObjectHideFlags: 0
