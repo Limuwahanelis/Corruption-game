@@ -34,6 +34,7 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
     }
     public void IncreseCorruption(int value)
     {
+        if (_isCorrupted) return;
         _corruptionProgress += value;
         if (_corruptionProgress >= _maxCorruption)
         {
