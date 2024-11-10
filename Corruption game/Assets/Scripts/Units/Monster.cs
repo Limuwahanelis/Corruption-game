@@ -13,6 +13,7 @@ public class Monster : Unit
     public override void SetUp()
     {
         base.SetUp();
+        _corruptionComponent.ResetCorruption(_unitData.TechnologyValue);
         _detector.OnTargetDetected.AddListener(SetTarget);
         _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
     }
@@ -36,7 +37,7 @@ public class Monster : Unit
                 _timer += Time.deltaTime;
                 if(_timer>_unitData.AttackInterval)
                 {
-                    _target.DealDamage(_unitData.Damage,_unitData.CorruptionForce,_mainBody.position);
+                    _target.DealDamage(_unitData.Damage,(_corruptionComponent.IsCorrupted?_unitData.CorruptionForce:0),_mainBody.position);
                     _timer = 0;
                 }
             }
@@ -44,7 +45,10 @@ public class Monster : Unit
     }
     public void SetTarget(TargetDetector.Target target)
     {
-        if (_target != null) return;
+        if (_target != null)
+        {
+            if (_target.tran != null) return;
+        }
         _target = target;
         if (_target == null) return;
         if (_target.corruptionComponent) _target.corruptionComponent.OnCorrupted.AddListener(OnTargetCorrupted);
@@ -70,6 +74,7 @@ public class Monster : Unit
     {
         _healthSystem.Heal((int)(_healthSystem.MaxHP * 0.3f));
         _spriteColor.ChangeColor(_corruptionColor.Color);
+        _target = null;
         UpdateTargets();
     }
     private void UpdateTargets()
@@ -88,6 +93,6 @@ public class Monster : Unit
         _detector.OnTargetDetected.RemoveListener(SetTarget);
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
         _mainBody.transform.localPosition = Vector3.zero;
-        _corruptionComponent.ResetCorruption();
+      
     }
 }

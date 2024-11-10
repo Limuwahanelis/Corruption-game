@@ -13,11 +13,14 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
     public UnityEvent<CorruptionComponent> OnUnCorrupted;
 
     [SerializeField] HealthBar _corruptionBar;
+    [SerializeField] IntGameEventSO _onFirstTimeCorruptedEvent;
     [SerializeField] int _maxCorruption;
     [SerializeField] int _corruptionDecrease;
     [SerializeField] float _corrutptionReduceInterval;
-    private int _corruptionProgress;
     [SerializeField]private bool _isCorrupted;
+    private int _corruptionProgress;
+    private int _technologyPointValue;
+    private bool _firstTimeCorrupted = true;
     private float _timer;
     private void Start()
     {
@@ -31,12 +34,14 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
     }
     public void IncreseCorruption(int value)
     {
+        if (_isCorrupted) return;
         _corruptionProgress += value;
         if (_corruptionProgress >= _maxCorruption)
         {
             if (!_isCorrupted)
             {
                 _isCorrupted = true;
+                _onFirstTimeCorruptedEvent?.Raise(_technologyPointValue, _corruptionBar.transform.position);
                 OnCorrupted?.Invoke(this);
             }
         }
@@ -46,13 +51,16 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
     public void ForceCorrupt()
     {
         _isCorrupted = true;
+        _firstTimeCorrupted = false;
         if (_corruptionBar) _corruptionBar.SetMaxHealth(_maxCorruption);
         if (_corruptionBar) _corruptionBar.SetHealth(_maxCorruption);
         OnCorrupted?.Invoke(this);
     }
-    public void ResetCorruption()
+    public void ResetCorruption(int technologyPointValue)
     {
         _isCorrupted = false;
+        _firstTimeCorrupted = true;
+        _technologyPointValue = technologyPointValue;
         if (_corruptionBar) _corruptionBar.SetMaxHealth(_maxCorruption);
         if (_corruptionBar) _corruptionBar.SetHealth(0);
         if (_isCorrupted)
