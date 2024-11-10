@@ -995,8 +995,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6e9ed099791fd84d9711f5920e3432b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnOnStart: 1
-  _spawnRate: 999
+  _spawnOnStart: 0
+  _spawnRate: 4
   _playerInteractable: 0
   _poolsList: {fileID: 11400000, guid: 68e5e49c1e201a346aaeab32eaddcb2f, type: 2}
   _spawnTran:
@@ -1825,8 +1825,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6e9ed099791fd84d9711f5920e3432b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnOnStart: 1
-  _spawnRate: 999
+  _spawnOnStart: 0
+  _spawnRate: 4
   _playerInteractable: 0
   _poolsList: {fileID: 11400000, guid: 68e5e49c1e201a346aaeab32eaddcb2f, type: 2}
   _spawnTran:
