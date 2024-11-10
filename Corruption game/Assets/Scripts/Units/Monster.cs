@@ -10,9 +10,9 @@ public class Monster : Unit
     [SerializeField] float _rangeFromTarget;
     
     private float _timer;
-    
-    private void Start()
+    public override void SetUp()
     {
+        base.SetUp();
         _detector.OnTargetDetected.AddListener(SetTarget);
         _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
     }
@@ -81,9 +81,13 @@ public class Monster : Unit
     {
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
     }
-
+    
     public override void ResetUnit()
     {
-        throw new System.NotImplementedException();
+       base.ResetUnit();
+        _detector.OnTargetDetected.RemoveListener(SetTarget);
+        _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
+        _mainBody.transform.localPosition = Vector3.zero;
+        _corruptionComponent.ResetCorruption();
     }
 }

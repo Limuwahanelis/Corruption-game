@@ -39,6 +39,12 @@ public class HealthSystem : MonoBehaviour,IDamagable
         _currentHP = math.clamp(_currentHP, 0, _maxHP);
         if (_hpBar != null) _hpBar.SetHealth(_currentHP);
     }
+    public virtual void ResetHealth()
+    {
+        if (_hpBar != null) _hpBar.SetMaxHealth(_maxHP);
+        _currentHP = _maxHP;
+        if (_hpBar != null) _hpBar.SetHealth(_currentHP);
+    }
     public virtual void TakeDamage(DamageInfo info)
     {
         if (_isInvincibleToDamage) return;

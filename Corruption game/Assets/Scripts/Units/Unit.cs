@@ -21,14 +21,23 @@ public abstract class Unit : MonoBehaviour
     protected TargetDetector.Target _target = null;
     private void Start()
     {
-        _factionAllegiance.SetAllegiance(_unitData.OriginalAllegiance);
-        _healthSystem.OnDeath += Death;
+
     }
     public virtual void Death(IDamagable damagable)
     {
         _pool.Release(this);
+        ResetUnit();
     }
-    public abstract void ResetUnit();
+    public virtual void SetUp()
+    {
+        _factionAllegiance.SetAllegiance(_unitData.OriginalAllegiance);
+        _healthSystem.OnDeath += Death;
+        _healthSystem.ResetHealth();
+    }
+    public virtual void ResetUnit()
+    {
+        _healthSystem.OnDeath -= Death;
+    }
     public void SetPool(IObjectPool<Unit> pool) => _pool = pool;
     public void SetOriginaltarget(Transform target)
     {

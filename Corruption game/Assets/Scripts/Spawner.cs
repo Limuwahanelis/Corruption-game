@@ -30,6 +30,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable
             {
                 Unit unit = _poolsList.Pools[_poolIndex].GetUnit();
                 unit.gameObject.name = $"{_index} {_corruptionComponent.IsCorrupted}";
+                unit.SetUp();
                 unit.transform.position = _spawnTran[_spawnIndex].position;
                 unit.SetOriginaltarget(_unitsOriginaltarget);
                 if (_corruptionComponent.IsCorrupted) unit.Corrupt();

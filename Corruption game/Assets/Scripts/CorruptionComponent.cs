@@ -50,6 +50,17 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
         if (_corruptionBar) _corruptionBar.SetHealth(_maxCorruption);
         OnCorrupted?.Invoke(this);
     }
+    public void ResetCorruption()
+    {
+        _isCorrupted = false;
+        if (_corruptionBar) _corruptionBar.SetMaxHealth(_maxCorruption);
+        if (_corruptionBar) _corruptionBar.SetHealth(0);
+        if (_isCorrupted)
+        {
+            OnCorrupted?.Invoke(this);
+            if (_corruptionBar) _corruptionBar.SetHealth(_maxCorruption);
+        }
+    }
     // Update is called once per frame
     void Update()
     {
