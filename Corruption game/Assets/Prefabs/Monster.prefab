@@ -388,6 +388,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _corruptionBar: {fileID: 282413255915364778}
+  _onFirstTimeCorruptedEvent: {fileID: 11400000, guid: cc99f4593e41016499f66aa7ecb83526, type: 2}
   _maxCorruption: 20
   _corruptionDecrease: 1
   _corrutptionReduceInterval: 4

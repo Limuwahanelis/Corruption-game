@@ -10,11 +10,13 @@ public class UnitData : ScriptableObject
     public int CorruptionForce => _baseCorruptionForce;
     public float AttackInterval => _attackInterval;
     public float Speed => _speed;
+    public int TechnologyValue => _baseFirstCorruptionTechnologyValue;
     public Allegiance OriginalAllegiance=>_startingAllegiance;
     [SerializeField] Unit _unitPrefab;
     [SerializeField] int _damage;
     [SerializeField] float _speed;
     [SerializeField] float _attackInterval;
     [SerializeField] int _baseCorruptionForce;
+    [SerializeField] int _baseFirstCorruptionTechnologyValue;
     [SerializeField] Allegiance _startingAllegiance;
 }

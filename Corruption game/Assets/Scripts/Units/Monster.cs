@@ -13,6 +13,7 @@ public class Monster : Unit
     public override void SetUp()
     {
         base.SetUp();
+        _corruptionComponent.ResetCorruption(_unitData.TechnologyValue);
         _detector.OnTargetDetected.AddListener(SetTarget);
         _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
     }
@@ -88,6 +89,6 @@ public class Monster : Unit
         _detector.OnTargetDetected.RemoveListener(SetTarget);
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
         _mainBody.transform.localPosition = Vector3.zero;
-        _corruptionComponent.ResetCorruption();
+      
     }
 }
