@@ -5,6 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Audio Event/BGMEvent")]
 public class BGMAudioEvent : AudioEvent
 {
+    [Range(0, 1)]
+    public float volume = 1f;
+    [Range(0, 2)]
+    public float pitch = 1f;
     public AudioClip audioClip;
     public override void Play(AudioSource audioSource)
     {

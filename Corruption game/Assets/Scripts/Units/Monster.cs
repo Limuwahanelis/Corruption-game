@@ -42,6 +42,7 @@ public class Monster : Unit
                 _timer += Time.deltaTime;
                 if(_timer>_unitData.AttackInterval)
                 {
+                    _attacksAudioevent.Play(_audioSource);
                     _target.DealDamage(_unitData.Damage,(_corruptionComponent.IsCorrupted?_unitData.CorruptionForce:0),_mainBody.position);
                     _timer = 0;
                 }

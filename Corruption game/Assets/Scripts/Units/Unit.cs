@@ -12,6 +12,8 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] protected UnitData _unitData;
     [SerializeField] protected MyColor _corruptionColor;
     [Header("Components")]
+    [SerializeField] protected MultipleClipsRandomizedAudioEvent _attacksAudioevent;
+    [SerializeField] protected AudioSource _audioSource;
     [SerializeField] protected HealthSystem _healthSystem;
     [SerializeField] protected FactionAllegiance _factionAllegiance;
     [SerializeField] protected CorruptionComponent _corruptionComponent;

@@ -6,7 +6,7 @@ public class ContinousBGMPlayer : MonoBehaviour
 {
     public AudioEvent MusicToPlay=>_musicToPlay;
     [SerializeField] AudioSource _audioSource;
-    [SerializeField] AudioEvent _musicToPlay;
+    [SerializeField] BGMAudioEvent _musicToPlay;
     public static ContinousBGMPlayer instance;
     private void Awake()
     {
