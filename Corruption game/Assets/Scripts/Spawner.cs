@@ -8,6 +8,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
 {
     [Header("Spawner settings")]
     [SerializeField] bool _spawnOnStart;
+    [SerializeField] bool _spawn;
     [SerializeField] float _spawnRate;
     [SerializeField] bool _playerInteractable;
     [SerializeField] int _firstTimeCorruptionTechnologyValue;
@@ -30,6 +31,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     private bool _isSelected = false;
     private float _time = 0;
     private float _index = 0;
+   
     private void Awake()
     {
         _spawners.AddSpawnerToList(this);
@@ -38,7 +40,6 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     private void Start()
     {
         ChangeOriginaltarget();
-        // TODO: Do smth when no more spanwers to attack.
         if (_spawnOnStart)
         {
             Spawn();
@@ -72,6 +73,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
 
     private void Update()
     {
+        if (!_spawn) return;
         _time += Time.deltaTime;
         if(_time > _spawnRate) 
         {
@@ -123,11 +125,12 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             _unitsOriginaltarget = closestSpawner.transform;
             closestSpawner.GetComponent<CorruptionComponent>().OnCorrupted.AddListener(OnOriginalTargetCorrupted);
         }
-        else Logger.Error("NO MORE SPAWNERS");
+        else _spawn = false;
     }
     public void CorruptSpawner(CorruptionComponent corruptionComponent)
     {
         ChangeOriginaltarget();
+        _spriteColor.ChangeColor(_corruptionColor.Color);
     }
 
     public void OnPointerExit(PointerEventData eventData)
