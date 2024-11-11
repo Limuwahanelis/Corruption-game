@@ -130,6 +130,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     public void CorruptSpawner(CorruptionComponent corruptionComponent)
     {
         ChangeOriginaltarget();
+        _spriteColor.ChangeColor(_corruptionColor.Color);
     }
 
     public void OnPointerExit(PointerEventData eventData)
