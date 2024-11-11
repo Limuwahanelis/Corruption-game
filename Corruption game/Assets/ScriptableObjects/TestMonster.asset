@@ -17,4 +17,5 @@ MonoBehaviour:
   _speed: 2
   _attackInterval: 1
   _baseCorruptionForce: 8
+  _baseFirstCorruptionTechnologyValue: 3
   _startingAllegiance: {fileID: 11400000, guid: bf14736a69e48ec46991e89799af7a45, type: 2}
