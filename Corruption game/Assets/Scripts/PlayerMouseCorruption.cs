@@ -6,7 +6,7 @@ public class PlayerMouseCorruption : MonoBehaviour
 {
     [SerializeField] int _corruptionPerClick;
     [SerializeField] RaycastFromCamera _cameraRaycast;
-    
+    [SerializeField] MouseCorruptionSpriteSpawner _corruptionSpriteSpawner;
     private IMouseCorruptable _corruptable;
     private bool _canInteract=true;
     public void SetInteraction(bool value)
@@ -29,6 +29,6 @@ public class PlayerMouseCorruption : MonoBehaviour
         {
             _corruptable.IncreseCorruption(_corruptionPerClick);
         }
-
+        _corruptionSpriteSpawner.SpawnSprite().transform.position = point;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMouseInteractions : MonoBehaviour
 {
     [SerializeField] RaycastFromCamera _cameraRaycast;
-    [SerializeField] MouseCorruptionSpriteSpawner _corruptionSpriteSpawner;
+    
     private IMouseInteractable _interactable;
     private IMouseInteractable _selectedInteractable;
     private bool _closeProductsMenu=true;
@@ -53,7 +53,7 @@ public class PlayerMouseInteractions : MonoBehaviour
             _interactable.Interact();
             _selectedInteractable = _interactable;
         }
-        _corruptionSpriteSpawner.SpawnSprite().transform.position = point;
+        //_corruptionSpriteSpawner.SpawnSprite().transform.position = point;
     }
 
     public void SetShouldCloseProductsMenu(bool value)
