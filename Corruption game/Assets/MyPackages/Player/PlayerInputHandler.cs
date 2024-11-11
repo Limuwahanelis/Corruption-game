@@ -10,7 +10,7 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] RaycastFromCamera _raycastCam;
     [SerializeField] PlayerMouseInteractions _mouseInteractions;
     [SerializeField] PlayerMouseCorruption _mouseCorrupt;
-    [SerializeField] PauseSetter _pauseSetter;
+    [SerializeField] GameEventSO _onGamePausedEvent;
 
     public void OnMousePos(InputValue inputValue)
     {
@@ -24,7 +24,7 @@ public class PlayerInputHandler : MonoBehaviour
     }
     public void OnPause()
     {
-        _pauseSetter.SetPause(!PauseSettings.IsGamePaused);
+        _onGamePausedEvent?.Raise();
     }
     public void OnRMB()
     {
