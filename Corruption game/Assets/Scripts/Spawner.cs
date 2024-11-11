@@ -73,6 +73,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
 
     private void Update()
     {
+        if(PauseSettings.IsGamePaused) return;
         if (!_spawn) return;
         _time += Time.deltaTime;
         if(_time > _spawnRate) 
