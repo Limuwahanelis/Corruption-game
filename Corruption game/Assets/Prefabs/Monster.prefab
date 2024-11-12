@@ -33,7 +33,6 @@ Transform:
   - {fileID: 8756891450984294683}
   - {fileID: 6136174158849214410}
   - {fileID: 1238787664276894330}
-  - {fileID: 8099032101198605292}
   - {fileID: 3972761694352526805}
   m_Father: {fileID: 1169108473288498822}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -68,7 +67,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8099032101198605292}
   m_Father: {fileID: 3430786072956781645}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6633839172528420622
@@ -428,6 +428,9 @@ GameObject:
   - component: {fileID: 4190207665059557518}
   - component: {fileID: 2956688686395390020}
   - component: {fileID: 737277427675410254}
+  - component: {fileID: 1429379185814835797}
+  - component: {fileID: 5652785060409723069}
+  - component: {fileID: 3912069690825569278}
   m_Layer: 0
   m_Name: Monster
   m_TagString: Untagged
@@ -466,8 +469,7 @@ MonoBehaviour:
   _testOriginalTarget: {fileID: 0}
   _unitData: {fileID: 11400000, guid: 58c5b0a689c21bc4f85077752191b409, type: 2}
   _corruptionColor: {fileID: 11400000, guid: 1348533493c178d4c9d96fd238d8e860, type: 2}
-  _attacksAudioevent: {fileID: 11400000, guid: bb3a4040a02eb2849b17fd6fcfcc553d, type: 2}
-  _audioSource: {fileID: 1090770752473154611}
+  _animManager: {fileID: 3912069690825569278}
   _healthSystem: {fileID: 1014495918979825475}
   _factionAllegiance: {fileID: 2956688686395390020}
   _corruptionComponent: {fileID: 4190207665059557518}
@@ -539,6 +541,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 11400000, guid: e425c5aae27ee3a4ba7fe911f002de51, type: 2}
+        m_TargetAssemblyTypeName: SingleClipAudioEvent, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1090770752473154611}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnUnCorrupted:
     m_PersistentCalls:
       m_Calls: []
@@ -588,6 +602,67 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1429379185814835797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7449139901122461866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 861cdb5fd903a814d8c9e9d9f70b4d5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnAttackPerformed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: c61ccba9740e0ee45b62cdb6b1fad8e1, type: 2}
+        m_TargetAssemblyTypeName: MultipleClipsAudioEvent, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1090770752473154611}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!95 &5652785060409723069
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7449139901122461866}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a99282aba7fc63f40842eabc7957c5dd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3912069690825569278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7449139901122461866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1915dd42fa80bd34fa6a8293ae5fb16a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animList: {fileID: 11400000, guid: 0356165edd832304daabc10cc1211c0e, type: 2}
 --- !u!1 &8917799464437878468
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,7 +693,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3430786072956781645}
+  m_Father: {fileID: 2700435879237704148}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &8096903920325574870
 BoxCollider2D:

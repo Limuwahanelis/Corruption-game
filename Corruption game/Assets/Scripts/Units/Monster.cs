@@ -28,7 +28,22 @@ public class Monster : Unit
             }
             else
             {
-                _originalTarget.DealDamage(_corruptionComponent.IsCorrupted?0:_unitData.Damage,_corruptionComponent.IsCorrupted?_unitData.CorruptionForce:0,_mainBody.position);
+                _timer += Time.deltaTime;
+                if (_timer > _unitData.AttackInterval)
+                {
+                    _animManager.Animator.SetFloat("Angle", -Vector2.SignedAngle(Vector2.up, (_originalTarget.tran.position - _mainBody.position).normalized));
+                    if (_mainBody.position.x < _originalTarget.tran.position.x) _animManager.PlayAnimation("Attack");
+                    else _animManager.PlayAnimation("Attack");
+                    StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
+                    {
+                        _animManager.PlayAnimation("Empty");
+                        if (_originalTarget == null) return;
+                        _originalTarget.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
+
+                    }));
+
+                    _timer = 0;
+                }
             }
         }
         else
@@ -42,8 +57,17 @@ public class Monster : Unit
                 _timer += Time.deltaTime;
                 if(_timer>_unitData.AttackInterval)
                 {
-                    _attacksAudioevent.Play(_audioSource);
-                    _target.DealDamage(_unitData.Damage,(_corruptionComponent.IsCorrupted?_unitData.CorruptionForce:0),_mainBody.position);
+                    _animManager.Animator.SetFloat("Angle", -Vector2.SignedAngle(Vector2.up, (_target.tran.position - _mainBody.position).normalized));
+                    if (_mainBody.position.x < _target.tran.position.x) _animManager.PlayAnimation("Attack");
+                    else _animManager.PlayAnimation("Attack");
+                    StartCoroutine( HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
+                    {
+                        _animManager.PlayAnimation("Empty");
+                        if (_target == null)  return;
+                        _target.DealDamage(_unitData.Damage, (_corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0), _mainBody.position);
+                        
+                    }));
+                    
                     _timer = 0;
                 }
             }
