@@ -22,6 +22,7 @@ public abstract class Unit : MonoBehaviour
     protected Allegiance _allegiance;
     protected IObjectPool<Unit> _pool;
     protected TargetDetector.Target _target = null;
+    protected bool _spawnCorrupted;
     private void Start()
     {
 
@@ -40,10 +41,12 @@ public abstract class Unit : MonoBehaviour
     public virtual void ResetUnit()
     {
         _healthSystem.OnDeath -= Death;
+        _spawnCorrupted= false; 
     }
     public void SetPool(IObjectPool<Unit> pool) => _pool = pool;
     public virtual void SetOriginaltarget(Transform target,IDamagable damagable, CorruptionComponent corruption)
     {
+       
         _originalTarget = new TargetDetector.Target()
         {
             tran = target,
@@ -61,6 +64,7 @@ public abstract class Unit : MonoBehaviour
     }
     public void Corrupt()
     {
+        _spawnCorrupted = true;
         _corruptionComponent.ForceCorrupt();
     }
 

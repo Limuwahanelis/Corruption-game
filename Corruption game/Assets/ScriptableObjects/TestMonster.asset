@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TestMonster
   m_EditorClassIdentifier: 
   _unitPrefab: {fileID: 699504403497554751, guid: 8b789ce22dc6d774bad33de14fb15bcc, type: 3}
-  _damage: 1
+  _damage: 40
   _speed: 2
   _attackInterval: 1
-  _baseCorruptionForce: 3
+  _baseCorruptionForce: 40
   _baseFirstCorruptionTechnologyValue: 3
   _startingAllegiance: {fileID: 11400000, guid: bf14736a69e48ec46991e89799af7a45, type: 2}

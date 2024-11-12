@@ -8,6 +8,7 @@ using static PlayerHealthSystem;
 
 public class HealthSystem : MonoBehaviour,IDamagable
 {
+
     public event IDamagable.OnDeathEventHandler OnDeath;
     public Action<DamageInfo> OnHitEvent;
     public bool IsAlive => _currentHP > 0;

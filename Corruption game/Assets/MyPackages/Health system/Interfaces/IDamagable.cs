@@ -7,6 +7,7 @@ using UnityEngine;
 
 public interface IDamagable
 {
+    public bool IsAlive {  get; }
     public delegate void OnDeathEventHandler(IDamagable damagable);
     public event OnDeathEventHandler OnDeath;
     void TakeDamage(DamageInfo info);
