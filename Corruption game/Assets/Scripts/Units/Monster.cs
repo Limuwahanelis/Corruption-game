@@ -22,6 +22,7 @@ public class Monster : Unit
     {
         if (_target == null || _target.tran==null)
         {
+            if (_originalTarget == null || _originalTarget.tran==null) return;
             if (Vector2.Distance(_mainBody.position, _originalTarget.tran.position) > _rangeFromTarget)
             {
                 _mainBody.Translate((_originalTarget.tran.position - _mainBody.position).normalized * _unitData.Speed * Time.deltaTime);

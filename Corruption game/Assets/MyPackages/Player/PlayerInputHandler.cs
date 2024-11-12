@@ -11,6 +11,8 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] PlayerMouseInteractions _mouseInteractions;
     [SerializeField] PlayerMouseCorruption _mouseCorrupt;
     [SerializeField] GameEventSO _onGamePausedEvent;
+    [SerializeField] GameObject _technologmenu;
+    private bool _isShowingTechnologymenu=false;
 
     public void OnMousePos(InputValue inputValue)
     {
@@ -29,5 +31,10 @@ public class PlayerInputHandler : MonoBehaviour
     public void OnRMB()
     {
         _mouseInteractions.TryRMBPress();
+    }
+    public void OnTechnologyMenu(InputValue inputValue)
+    {
+        _isShowingTechnologymenu = !_isShowingTechnologymenu;
+        _technologmenu.SetActive(_isShowingTechnologymenu);
     }
 }
