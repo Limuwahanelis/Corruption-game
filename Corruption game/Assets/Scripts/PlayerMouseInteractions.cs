@@ -35,6 +35,7 @@ public class PlayerMouseInteractions : MonoBehaviour
         {
             _interactable = col.attachedRigidbody.GetComponent<IMouseInteractable>();
         }
+            else _interactable= null;
         
         if (_interactable==null)
         {

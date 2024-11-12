@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPointerExitHandler
 {
+    public Transform LinePoint => _linePoint;
+
     [Header("Spawner settings")]
     [SerializeField] bool _spawnOnStart;
     [SerializeField] bool _spawn;
@@ -20,6 +22,9 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [SerializeField] List<int> _spawnNumber;
     [SerializeField] List<int> _corruptedUnitsSpawnNumber;
     [Header("Components")]
+    
+    [SerializeField] LineRenderer _lineRenderer;
+    [SerializeField] Transform _linePoint;
     [SerializeField] Transform _unitsOriginaltarget;
     [SerializeField] FactionAllegiance _factionAllegiance;
     [SerializeField] CorruptionComponent _corruptionComponent;
@@ -87,19 +92,29 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         _isSelected = true;
         _selectedBorder.SetActive(true);
         _hoverBorder.SetActive(false);
+        _lineRenderer.SetPosition(0, _linePoint.position);
+        _lineRenderer.SetPosition(1, _unitsOriginaltarget.GetComponent<Spawner>().LinePoint.position);
+
     }
 
     public void Deselect()
     {
         _isSelected= false;
         _selectedBorder.SetActive(false);
+        _lineRenderer.SetPosition(0, Vector3.zero);
+        _lineRenderer.SetPosition(1, Vector3.zero);
     }
 
     public void RBMPress(Transform tran,bool isCorrupted)
     {
         if (isCorrupted) return;
         if (!_corruptionComponent.IsCorrupted) return;
-        if(_isSelected) _unitsOriginaltarget = tran;
+        if (_isSelected)
+        {
+            _unitsOriginaltarget = tran;
+            _lineRenderer.SetPosition(0, _linePoint.position);
+            _lineRenderer.SetPosition(1, _unitsOriginaltarget.GetComponent<Spawner>().LinePoint.position);
+        }
 
     }
     private void OnOriginalTargetCorrupted(CorruptionComponent corruptionComponent)
@@ -125,6 +140,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             }
             _unitsOriginaltarget = closestSpawner.transform;
             closestSpawner.GetComponent<CorruptionComponent>().OnCorrupted.AddListener(OnOriginalTargetCorrupted);
+            if (_isSelected) Interact();
         }
         else _spawn = false;
     }
