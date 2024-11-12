@@ -5,6 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Audio Event/MultipleClipsEvent")]
 public class MultipleClipsAudioEvent : AudioEvent
 {
+    [Range(0, 1)]
+    public float volume = 1f;
+    [Range(0, 2)]
+    public float pitch = 1f;
     public AudioClip[] audioclips;
     public bool canOverride;
     

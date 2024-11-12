@@ -417,6 +417,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _spawnRate
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptedUnitsSpawnNumber.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5196706309773750875, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _isCorrupted
       value: 1
@@ -726,7 +734,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.0472635, y: -1.2087585, z: -9.982295}
+  m_LocalPosition: {x: -1.0472635, y: -1.2087585, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -746,7 +754,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 384
 --- !u!114 &519420034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1137,7 +1145,7 @@ Transform:
   m_GameObject: {fileID: 912557893}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.3672636, y: -4.8187585, z: -0.06405685}
+  m_LocalPosition: {x: -1.3672636, y: -19.95, z: -0.06405685}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1466,6 +1474,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _spawnRate
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptedUnitsSpawnNumber.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8860880824874139916, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.48
@@ -1782,6 +1798,10 @@ PrefabInstance:
     - target: {fileID: 8918637591973058553, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: m_Name
       value: Monster Spawner (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8918637591973058553, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
