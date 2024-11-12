@@ -12,6 +12,8 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] protected UnitData _unitData;
     [SerializeField] protected MyColor _corruptionColor;
     [Header("Components")]
+    [SerializeField] protected AudioSourcePool _audioSourcePool;
+    [SerializeField] protected MultipleClipsRandomizedAudioEvent _corruptedDieAudioEvent;
     [SerializeField] protected AnimationManager _animManager;
     [SerializeField] protected HealthSystem _healthSystem;
     [SerializeField] protected FactionAllegiance _factionAllegiance;
@@ -32,8 +34,10 @@ public abstract class Unit : MonoBehaviour
         _pool.Release(this);
         ResetUnit();
     }
-    public virtual void SetUp()
+    public virtual void SetUp(AudioSourcePool audioSourcePool)
     {
+        _audioSourcePool = audioSourcePool;
+        _healthSystem.SetMacHP(_unitData.MaxHP);
         _factionAllegiance.SetAllegiance(_unitData.OriginalAllegiance);
         _healthSystem.OnDeath += Death;
         _healthSystem.ResetHealth();
@@ -41,6 +45,7 @@ public abstract class Unit : MonoBehaviour
     public virtual void ResetUnit()
     {
         _healthSystem.OnDeath -= Death;
+        _spriteColor.gameObject.transform.localPosition = Vector2.zero;
         _spawnCorrupted= false; 
     }
     public void SetPool(IObjectPool<Unit> pool) => _pool = pool;

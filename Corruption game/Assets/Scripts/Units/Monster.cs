@@ -11,9 +11,9 @@ public class Monster : Unit
     [SerializeField] ListOfSpawners _spawnersList;
     
     private float _timer;
-    public override void SetUp()
+    public override void SetUp(AudioSourcePool audioSourcePool)
     {
-        base.SetUp();
+        base.SetUp(audioSourcePool);
         _corruptionComponent.ResetCorruption(_unitData.TechnologyValue);
         _detector.OnTargetDetected.AddListener(SetTarget);
         _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
@@ -189,7 +189,22 @@ public class Monster : Unit
     {
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
     }
-    
+    public override void Death(IDamagable damagable)
+    {
+        if (_corruptionComponent.IsCorrupted)
+        {
+            GameObject source = _audioSourcePool.GetSource();
+            source.transform.position = _mainBody.position;
+            _corruptedDieAudioEvent.Play(source.GetComponent<AudioSource>());
+        StartCoroutine(HelperClass.DelayedFunction(0.6f, () => base.Death(damagable)));
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            base.Death(damagable);
+        }
+        
+    }
     public override void ResetUnit()
     {
        base.ResetUnit();

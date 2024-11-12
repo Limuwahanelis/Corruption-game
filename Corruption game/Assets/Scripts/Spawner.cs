@@ -22,6 +22,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [SerializeField] List<int> _spawnNumber;
     [SerializeField] List<int> _corruptedUnitsSpawnNumber;
     [Header("Components")]
+    [SerializeField] AudioSourcePool _sourcePool;
     [SerializeField] HealthSystem _healthSystem;
     [SerializeField] LineRenderer _lineRenderer;
     [SerializeField] Transform _linePoint;
@@ -63,7 +64,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             {
                 Unit unit = _poolsList.Pools[_poolIndex].GetUnit();
                 unit.gameObject.name = $"{_index} {_corruptionComponent.IsCorrupted}";
-                unit.SetUp();
+                unit.SetUp(_sourcePool);
                 unit.transform.position = _spawnTran[_spawnIndex].position;
                 unit.SetOriginaltarget(_unitsOriginaltarget, _unitsOriginaltarget.GetComponent<IDamagable>(), _unitsOriginaltarget.GetComponent<CorruptionComponent>());
                 if (_corruptionComponent.IsCorrupted) unit.Corrupt();
@@ -108,8 +109,10 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         _lineRenderer.SetPosition(1, Vector3.zero);
     }
 
+    // this function is called on currently selected spawner
     public void RBMPress(Transform tran,bool isCorrupted)
     {
+        if (isCorrupted) return;
         if (!_corruptionComponent.IsCorrupted) return;
         if (_isSelected)
         {
@@ -153,7 +156,12 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         _time = 0;
         _corruptionComponent.UnCorrupt();
         _spriteColor.ChangeColor(Color.white);
-        if (_isPointedAt) Deselect();
+        if (_isPointedAt)
+        {
+            Deselect();
+            _hoverBorder.SetActive(false);
+            _destroyedHoverBorder.SetActive(true);
+        }
     }
     public void CorruptSpawner(CorruptionComponent corruptionComponent)
     {

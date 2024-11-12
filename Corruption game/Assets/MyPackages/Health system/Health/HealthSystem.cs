@@ -34,6 +34,10 @@ public class HealthSystem : MonoBehaviour,IDamagable
         _currentHP = _maxHP;
         if (_hpBar != null) _hpBar.SetHealth(_currentHP);
     }
+    public void SetMacHP(int value)
+    {
+        _maxHP = value;
+    }
     public void Heal(int amount)
     {
         _currentHP += amount;
