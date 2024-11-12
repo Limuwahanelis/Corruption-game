@@ -138,6 +138,7 @@ public class Monster : Unit
         _healthSystem.Heal((int)(_healthSystem.MaxHP * 0.3f));
         _spriteColor.ChangeColor(_corruptionColor.Color);
         _target = null;
+        GetNewOriginaltarget(corruption);
         UpdateTargets();
     }
     private void UpdateTargets()

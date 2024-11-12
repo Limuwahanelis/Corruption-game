@@ -945,9 +945,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c88e909029935e44a7737f0aba86c44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mask:
-    serializedVersion: 2
-    m_Bits: 416
   _bigRaycastRadius: 0.45
 --- !u!114 &519420034
 MonoBehaviour:
@@ -1588,6 +1585,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraRaycast: {fileID: 519420033}
+  _interactionMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &948807281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1666,6 +1666,9 @@ MonoBehaviour:
   _cameraRaycast: {fileID: 519420033}
   _corruptionSpriteSpawner: {fileID: 34085152}
   _bigCorruptionSpriteSpawner: {fileID: 495440610}
+  _corruptioMmask:
+    serializedVersion: 2
+    m_Bits: 384
 --- !u!114 &948807285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5538,7 +5541,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2083137236
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5554,10 +5557,10 @@ RectTransform:
   - {fileID: 1215256421}
   m_Father: {fileID: 1440473344}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -647.02, y: -31.818954}
-  m_SizeDelta: {x: 623.0769, y: 1021.8502}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 307.09003, y: -31.818954}
+  m_SizeDelta: {x: 634.86, y: 1021.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2083137237
 MonoBehaviour:

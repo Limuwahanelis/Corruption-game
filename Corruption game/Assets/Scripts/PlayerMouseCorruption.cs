@@ -8,6 +8,7 @@ public class PlayerMouseCorruption : MonoBehaviour
     [SerializeField] RaycastFromCamera _cameraRaycast;
     [SerializeField] MouseCorruptionSpriteSpawner _corruptionSpriteSpawner;
     [SerializeField] MouseCorruptionSpriteSpawner _bigCorruptionSpriteSpawner;
+    [SerializeField] LayerMask _corruptioMmask;
     private IMouseCorruptable _corruptable;
     private bool _canInteract=true;
     private bool _bigCorruption=false;
@@ -26,7 +27,7 @@ public class PlayerMouseCorruption : MonoBehaviour
         Vector3 point;
         if (_bigCorruption)
         {
-            Collider2D[] cols = _cameraRaycast.BigRaycast(out point, out _);
+            Collider2D[] cols = _cameraRaycast.BigRaycast(out point, out _,_corruptioMmask);
             if (cols != null)
             {
                 for (int i = 0; i < cols.Length; i++)
@@ -43,7 +44,7 @@ public class PlayerMouseCorruption : MonoBehaviour
         }
         else
         {
-            Collider2D col = _cameraRaycast.Raycast(out point, out float width);
+            Collider2D col = _cameraRaycast.Raycast(out point, out float width, _corruptioMmask);
             Logger.Log(col, this);
             if (col)
             {
