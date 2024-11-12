@@ -78,11 +78,50 @@ public class Monster : Unit
     {
         base.SetOriginaltarget(target, damagable, corruption);
         if (corruption != null) corruption.OnCorrupted.AddListener(GetNewOriginaltarget);
+        if (damagable != null) damagable.OnDeath += GetNewOriginaltarget;
     }
     private void GetNewOriginaltarget(CorruptionComponent corruption)
     {
+        if(_spawnCorrupted)
+        {
+            _spawnCorrupted = false;
+            return;
+        }
         corruption.OnCorrupted.RemoveListener(GetNewOriginaltarget);
         List<Spawner> spawners = _spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance);
+        if (spawners != null && spawners.Count > 0)
+        {
+            Spawner closestSpawner = spawners[0];
+            float shortestDist = Vector3.Distance(transform.position, closestSpawner.transform.position);
+            for (int i = 1; i < spawners.Count; i++)
+            {
+                float dist = Vector3.Distance(spawners[i].transform.position, transform.position);
+                if (dist < shortestDist)
+                {
+                    closestSpawner = spawners[i];
+                    shortestDist = dist;
+                }
+            }
+            _originalTarget = new TargetDetector.Target()
+            {
+                tran = closestSpawner.transform,
+                corruptionComponent = closestSpawner.GetComponent<CorruptionComponent>(),
+                damagable = closestSpawner.GetComponent<IDamagable>(),
+            };
+        }
+        else Logger.Error("NO MORE SPAWNERS TO ATTACK");
+        // TODO: Do smth when no more spanwers to attack.
+    }
+    private void GetNewOriginaltarget(IDamagable damageable)
+    {
+        damageable.OnDeath-=GetNewOriginaltarget;
+        List<Spawner> spawners = new List<Spawner>();
+        if (_corruptionComponent.IsCorrupted)
+        {
+            spawners.AddRange(_spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance));
+        }
+        else spawners.AddRange(_spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance && x.GetComponent<IDamagable>().IsAlive));
+        //List<Spawner> spawners = _spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance);
         if (spawners != null && spawners.Count > 0)
         {
             Spawner closestSpawner = spawners[0];
