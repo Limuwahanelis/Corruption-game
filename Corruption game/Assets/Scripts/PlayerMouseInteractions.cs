@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerMouseInteractions : MonoBehaviour
 {
     [SerializeField] RaycastFromCamera _cameraRaycast;
-    
+    [SerializeField] LayerMask _interactionMask;
     private IMouseInteractable _interactable;
     private IMouseInteractable _selectedInteractable;
     private bool _closeProductsMenu=true;
@@ -20,7 +21,7 @@ public class PlayerMouseInteractions : MonoBehaviour
         if (PauseSettings.IsGamePaused) return;
         if (_selectedInteractable == null) return;
         Vector3 point;
-        Collider2D col = _cameraRaycast.Raycast(out point, out float width);
+        Collider2D col = _cameraRaycast.Raycast(out point, out float width,_interactionMask);
         if(col == null) return;
         _selectedInteractable.RBMPress(col.attachedRigidbody.transform,col.attachedRigidbody.GetComponent<CorruptionComponent>().IsCorrupted);
     }
@@ -29,7 +30,7 @@ public class PlayerMouseInteractions : MonoBehaviour
         if(PauseSettings.IsGamePaused) return;
         if (!_canInteract) return;
         Vector3 point;
-        Collider2D col = _cameraRaycast.Raycast(out point, out float width);
+        Collider2D col = _cameraRaycast.Raycast(out point, out float width, _interactionMask);
             if(col)
         {
             _interactable = col.attachedRigidbody.GetComponent<IMouseInteractable>();

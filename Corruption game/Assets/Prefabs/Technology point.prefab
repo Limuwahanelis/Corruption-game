@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4031596875231040475}
   - component: {fileID: 4491173964462896775}
   - component: {fileID: 5136606692523610603}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Technology point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
