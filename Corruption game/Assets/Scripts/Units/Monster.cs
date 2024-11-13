@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class Monster : Unit
     [SerializeField] Transform _mainBody;
     [SerializeField] float _rangeFromTarget;
     [SerializeField] ListOfSpawners _spawnersList;
-    
+    private Coroutine _attackCor;
     private float _timer;
     public override void SetUp(AudioSourcePool audioSourcePool)
     {
@@ -35,13 +36,22 @@ public class Monster : Unit
                     _animManager.Animator.SetFloat("Angle", -Vector2.SignedAngle(Vector2.up, (_originalTarget.tran.position - _mainBody.position).normalized));
                     if (_mainBody.position.x < _originalTarget.tran.position.x) _animManager.PlayAnimation("Attack");
                     else _animManager.PlayAnimation("Attack");
-                    StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
+                    Action<TargetDetector.Target> DealDMG = x => 
                     {
                         _animManager.PlayAnimation("Empty");
-                        if (_originalTarget == null) return;
-                        _originalTarget.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
+                        if (x == null) return;
+                        if (x != _originalTarget) return;
+                        x.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
 
-                    }));
+                    };
+                    _attackCor=StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () => DealDMG(_originalTarget)));
+                    //StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
+                    //{
+                    //    _animManager.PlayAnimation("Empty");
+                    //    if (_originalTarget == null) return;
+                    //    _originalTarget.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
+
+                    //}));
 
                     _timer = 0;
                 }
@@ -114,6 +124,12 @@ public class Monster : Unit
     }
     private void GetNewOriginaltarget(IDamagable damageable)
     {
+        _timer = 0;
+        if (_attackCor != null)
+        {
+            StopCoroutine(_attackCor);
+            _animManager.PlayAnimation("Empty");
+        }
         damageable.OnDeath-=GetNewOriginaltarget;
         List<Spawner> spawners = new List<Spawner>();
         if (_corruptionComponent.IsCorrupted)
