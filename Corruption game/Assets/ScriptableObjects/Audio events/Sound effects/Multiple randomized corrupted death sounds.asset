@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Multiple randomized corrupted death sounds
   m_EditorClassIdentifier: 
   volume:
-    minValue: 0.9117061
+    minValue: 1
     maxValue: 1
   pitch:
     minValue: 0.6368666

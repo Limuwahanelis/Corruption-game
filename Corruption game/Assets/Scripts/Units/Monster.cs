@@ -12,15 +12,30 @@ public class Monster : Unit
     [SerializeField] ListOfSpawners _spawnersList;
     private Coroutine _attackCor;
     private float _timer;
+    private float _hpDeacyTimer = 0;
+    private DamageInfo _sefDMG=new DamageInfo();
     public override void SetUp(AudioSourcePool audioSourcePool)
     {
         base.SetUp(audioSourcePool);
+        _sefDMG.dmg = _unitData.CorruptionHPDecayValue;
+        _sefDMG.dmgPosition=_mainBody.position;
         _corruptionComponent.ResetCorruption(_unitData.TechnologyValue);
         _detector.OnTargetDetected.AddListener(SetTarget);
         _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
     }
     private void Update()
     {
+        if (PauseSettings.IsGamePaused) return;
+        if (_corruptionComponent.IsCorrupted)
+        {
+            _hpDeacyTimer += Time.deltaTime;
+            if (_hpDeacyTimer > _unitData.CorrupitionHPDecayInterval)
+            {
+                _hpDeacyTimer = 0;
+
+                _healthSystem.TakeDamage(_sefDMG);
+            }
+        }
         if (_target == null || _target.tran==null)
         {
             if (_originalTarget == null || _originalTarget.tran==null) return;
@@ -119,7 +134,7 @@ public class Monster : Unit
                 damagable = closestSpawner.GetComponent<IDamagable>(),
             };
         }
-        else Logger.Error("NO MORE SPAWNERS TO ATTACK");
+        else enabled = false; //Logger.Error("NO MORE SPAWNERS TO ATTACK");
         // TODO: Do smth when no more spanwers to attack.
     }
     private void GetNewOriginaltarget(IDamagable damageable)
@@ -158,7 +173,7 @@ public class Monster : Unit
                 damagable = closestSpawner.GetComponent<IDamagable>(),
             };
         }
-        else Logger.Error("NO MORE SPAWNERS TO ATTACK");
+        else enabled = false; //Logger.Error("NO MORE SPAWNERS TO ATTACK");
         // TODO: Do smth when no more spanwers to attack.
     }
     public void SetTarget(TargetDetector.Target target)
@@ -182,7 +197,14 @@ public class Monster : Unit
     }
     private void OnTargetDestroyed(IDamagable damagable)
     {
-
+        // when there is no tavailable targets _target becomes null
+        if(_target==null)
+        {
+            damagable.OnDeath -= OnTargetDestroyed;
+            _target = null;
+            SetTarget(_detector.GetClosestTarget(_mainBody));
+            return;
+        }
         if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
         _target = null;

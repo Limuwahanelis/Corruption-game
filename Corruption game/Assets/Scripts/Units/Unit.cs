@@ -39,6 +39,8 @@ public abstract class Unit : MonoBehaviour
         _audioSourcePool = audioSourcePool;
         _healthSystem.SetMacHP(_unitData.MaxHP);
         _factionAllegiance.SetAllegiance(_unitData.OriginalAllegiance);
+        _corruptionComponent.SetMaxCorruption(_unitData.MaxCorruption);
+        _corruptionComponent.SetUp(_unitData.CorruptionreductionIntervalInSeconds, _unitData.CorruptionReductionValue);
         _healthSystem.OnDeath += Death;
         _healthSystem.ResetHealth();
     }
