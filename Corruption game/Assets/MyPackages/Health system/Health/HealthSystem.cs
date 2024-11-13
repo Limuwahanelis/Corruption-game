@@ -8,6 +8,7 @@ using static PlayerHealthSystem;
 
 public class HealthSystem : MonoBehaviour,IDamagable
 {
+
     public event IDamagable.OnDeathEventHandler OnDeath;
     public Action<DamageInfo> OnHitEvent;
     public bool IsAlive => _currentHP > 0;
@@ -32,6 +33,10 @@ public class HealthSystem : MonoBehaviour,IDamagable
         if(_hpBar!=null)_hpBar.SetMaxHealth(_maxHP);
         _currentHP = _maxHP;
         if (_hpBar != null) _hpBar.SetHealth(_currentHP);
+    }
+    public void SetMacHP(int value)
+    {
+        _maxHP = value;
     }
     public void Heal(int amount)
     {

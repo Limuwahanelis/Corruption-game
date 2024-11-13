@@ -469,6 +469,8 @@ MonoBehaviour:
   _testOriginalTarget: {fileID: 0}
   _unitData: {fileID: 11400000, guid: 58c5b0a689c21bc4f85077752191b409, type: 2}
   _corruptionColor: {fileID: 11400000, guid: 1348533493c178d4c9d96fd238d8e860, type: 2}
+  _audioSourcePool: {fileID: 0}
+  _corruptedDieAudioEvent: {fileID: 11400000, guid: d56f7f8583dd74b48bdc7e4cb3c451d8, type: 2}
   _animManager: {fileID: 3912069690825569278}
   _healthSystem: {fileID: 1014495918979825475}
   _factionAllegiance: {fileID: 2956688686395390020}
@@ -556,12 +558,12 @@ MonoBehaviour:
   OnUnCorrupted:
     m_PersistentCalls:
       m_Calls: []
+  _corruptOnStart: 0
   _corruptionBar: {fileID: 282413255915364778}
   _onFirstTimeCorruptedEvent: {fileID: 11400000, guid: cc99f4593e41016499f66aa7ecb83526, type: 2}
   _maxCorruption: 20
   _corruptionDecrease: 1
   _corrutptionReduceInterval: 4
-  _isCorrupted: 0
 --- !u!114 &2956688686395390020
 MonoBehaviour:
   m_ObjectHideFlags: 0

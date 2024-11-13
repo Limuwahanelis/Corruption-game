@@ -22,7 +22,8 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [SerializeField] List<int> _spawnNumber;
     [SerializeField] List<int> _corruptedUnitsSpawnNumber;
     [Header("Components")]
-    
+    [SerializeField] AudioSourcePool _sourcePool;
+    [SerializeField] HealthSystem _healthSystem;
     [SerializeField] LineRenderer _lineRenderer;
     [SerializeField] Transform _linePoint;
     [SerializeField] Transform _unitsOriginaltarget;
@@ -32,15 +33,17 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [SerializeField] MyColor _corruptionColor;
     [Header("Mouse interactions")]
     [SerializeField] GameObject _hoverBorder;
+    [SerializeField] GameObject _destroyedHoverBorder;
     [SerializeField] GameObject _selectedBorder;
     private bool _isSelected = false;
     private float _time = 0;
     private float _index = 0;
-   
+    private bool _isPointedAt=false;
     private void Awake()
     {
         _spawners.AddSpawnerToList(this);
         _corruptionComponent.SetTechnologyPointsvalue(_firstTimeCorruptionTechnologyValue);
+        _healthSystem.OnDeath += DestroySpawner;
     }
     private void Start()
     {
@@ -61,7 +64,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             {
                 Unit unit = _poolsList.Pools[_poolIndex].GetUnit();
                 unit.gameObject.name = $"{_index} {_corruptionComponent.IsCorrupted}";
-                unit.SetUp();
+                unit.SetUp(_sourcePool);
                 unit.transform.position = _spawnTran[_spawnIndex].position;
                 unit.SetOriginaltarget(_unitsOriginaltarget, _unitsOriginaltarget.GetComponent<IDamagable>(), _unitsOriginaltarget.GetComponent<CorruptionComponent>());
                 if (_corruptionComponent.IsCorrupted) unit.Corrupt();
@@ -89,6 +92,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     }
     public void Interact()
     {
+        if (!_healthSystem.IsAlive) return;
         _isSelected = true;
         _selectedBorder.SetActive(true);
         _hoverBorder.SetActive(false);
@@ -105,6 +109,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         _lineRenderer.SetPosition(1, Vector3.zero);
     }
 
+    // this function is called on currently selected spawner
     public void RBMPress(Transform tran,bool isCorrupted)
     {
         if (isCorrupted) return;
@@ -112,6 +117,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         if (_isSelected)
         {
             _unitsOriginaltarget = tran;
+            _unitsOriginaltarget.GetComponent<CorruptionComponent>().OnCorrupted.AddListener(OnOriginalTargetCorrupted);
             _lineRenderer.SetPosition(0, _linePoint.position);
             _lineRenderer.SetPosition(1, _unitsOriginaltarget.GetComponent<Spawner>().LinePoint.position);
         }
@@ -144,22 +150,49 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         }
         else _spawn = false;
     }
+    private void DestroySpawner(IDamagable damagable)
+    {
+        _spawn = false;
+        _time = 0;
+        _corruptionComponent.UnCorrupt();
+        _spriteColor.ChangeColor(Color.white);
+        if (_isPointedAt)
+        {
+            Deselect();
+            _hoverBorder.SetActive(false);
+            _destroyedHoverBorder.SetActive(true);
+        }
+    }
     public void CorruptSpawner(CorruptionComponent corruptionComponent)
     {
+        _time = 0;
+        _spawn = true;
+        _healthSystem.Heal(_healthSystem.MaxHP);
         ChangeOriginaltarget();
         _spriteColor.ChangeColor(_corruptionColor.Color);
+        if(_destroyedHoverBorder.activeSelf)
+        {
+            _destroyedHoverBorder.SetActive(false);
+            _hoverBorder.SetActive(true);
+        }
+
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (_isSelected) return;
-        _hoverBorder.SetActive(false);
+        if (_healthSystem.IsAlive) _hoverBorder.SetActive(false);
+        else _destroyedHoverBorder.SetActive(false);
+        _isPointedAt = false;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (_isSelected) return;
-        _hoverBorder.SetActive(true);
+        if (_healthSystem.IsAlive) _hoverBorder.SetActive(true);
+        else _destroyedHoverBorder.SetActive(true);
+        _isPointedAt = true;
+
     }
     private void OnDestroy()
     {

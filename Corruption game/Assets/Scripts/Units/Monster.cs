@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,11 +10,11 @@ public class Monster : Unit
     [SerializeField] Transform _mainBody;
     [SerializeField] float _rangeFromTarget;
     [SerializeField] ListOfSpawners _spawnersList;
-    
+    private Coroutine _attackCor;
     private float _timer;
-    public override void SetUp()
+    public override void SetUp(AudioSourcePool audioSourcePool)
     {
-        base.SetUp();
+        base.SetUp(audioSourcePool);
         _corruptionComponent.ResetCorruption(_unitData.TechnologyValue);
         _detector.OnTargetDetected.AddListener(SetTarget);
         _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
@@ -35,13 +36,22 @@ public class Monster : Unit
                     _animManager.Animator.SetFloat("Angle", -Vector2.SignedAngle(Vector2.up, (_originalTarget.tran.position - _mainBody.position).normalized));
                     if (_mainBody.position.x < _originalTarget.tran.position.x) _animManager.PlayAnimation("Attack");
                     else _animManager.PlayAnimation("Attack");
-                    StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
+                    Action<TargetDetector.Target> DealDMG = x => 
                     {
                         _animManager.PlayAnimation("Empty");
-                        if (_originalTarget == null) return;
-                        _originalTarget.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
+                        if (x == null) return;
+                        if (x != _originalTarget) return;
+                        x.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
 
-                    }));
+                    };
+                    _attackCor=StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () => DealDMG(_originalTarget)));
+                    //StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
+                    //{
+                    //    _animManager.PlayAnimation("Empty");
+                    //    if (_originalTarget == null) return;
+                    //    _originalTarget.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
+
+                    //}));
 
                     _timer = 0;
                 }
@@ -78,11 +88,56 @@ public class Monster : Unit
     {
         base.SetOriginaltarget(target, damagable, corruption);
         if (corruption != null) corruption.OnCorrupted.AddListener(GetNewOriginaltarget);
+        if (damagable != null) damagable.OnDeath += GetNewOriginaltarget;
     }
     private void GetNewOriginaltarget(CorruptionComponent corruption)
     {
+        if(_spawnCorrupted)
+        {
+            _spawnCorrupted = false;
+            return;
+        }
         corruption.OnCorrupted.RemoveListener(GetNewOriginaltarget);
         List<Spawner> spawners = _spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance);
+        if (spawners != null && spawners.Count > 0)
+        {
+            Spawner closestSpawner = spawners[0];
+            float shortestDist = Vector3.Distance(transform.position, closestSpawner.transform.position);
+            for (int i = 1; i < spawners.Count; i++)
+            {
+                float dist = Vector3.Distance(spawners[i].transform.position, transform.position);
+                if (dist < shortestDist)
+                {
+                    closestSpawner = spawners[i];
+                    shortestDist = dist;
+                }
+            }
+            _originalTarget = new TargetDetector.Target()
+            {
+                tran = closestSpawner.transform,
+                corruptionComponent = closestSpawner.GetComponent<CorruptionComponent>(),
+                damagable = closestSpawner.GetComponent<IDamagable>(),
+            };
+        }
+        else Logger.Error("NO MORE SPAWNERS TO ATTACK");
+        // TODO: Do smth when no more spanwers to attack.
+    }
+    private void GetNewOriginaltarget(IDamagable damageable)
+    {
+        _timer = 0;
+        if (_attackCor != null)
+        {
+            StopCoroutine(_attackCor);
+            _animManager.PlayAnimation("Empty");
+        }
+        damageable.OnDeath-=GetNewOriginaltarget;
+        List<Spawner> spawners = new List<Spawner>();
+        if (_corruptionComponent.IsCorrupted)
+        {
+            spawners.AddRange(_spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance));
+        }
+        else spawners.AddRange(_spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance && x.GetComponent<IDamagable>().IsAlive));
+        //List<Spawner> spawners = _spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance);
         if (spawners != null && spawners.Count > 0)
         {
             Spawner closestSpawner = spawners[0];
@@ -150,7 +205,22 @@ public class Monster : Unit
     {
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
     }
-    
+    public override void Death(IDamagable damagable)
+    {
+        if (_corruptionComponent.IsCorrupted)
+        {
+            GameObject source = _audioSourcePool.GetSource();
+            source.transform.position = _mainBody.position;
+            _corruptedDieAudioEvent.Play(source.GetComponent<AudioSource>());
+        StartCoroutine(HelperClass.DelayedFunction(0.6f, () => base.Death(damagable)));
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            base.Death(damagable);
+        }
+        
+    }
     public override void ResetUnit()
     {
        base.ResetUnit();

@@ -38,7 +38,9 @@ public class CameraShake2D : MonoBehaviour
     void Start()
     {
         _shake = Mathf.Pow(_trauma, _power);
+#if UNITY_EDITOR
         if (!_continous) _trauma = 0;
+#endif
     }
 
     // Update is called once per frame

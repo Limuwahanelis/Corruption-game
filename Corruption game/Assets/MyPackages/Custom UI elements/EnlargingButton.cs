@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EnlargingButton :Selectable,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
@@ -44,13 +43,18 @@ public class EnlargingButton :Selectable,IPointerEnterHandler,IPointerExitHandle
     {
         onClick?.Invoke();
     }
-    protected override void Reset()
-    {
-        base.Reset();
-        transition=Transition.None;
-        RectTransform rectTransform = GetComponent<RectTransform>();
-        if (rectTransform != null) _rectTransform = rectTransform;
-    }
+//#if UNITY_EDITOR
+//    protected override void Reset()
+//    {
+//        {
+//            base.Reset();
+//            transition = Transition.None;
+//            RectTransform rectTransform = GetComponent<RectTransform>();
+//            if (rectTransform != null) _rectTransform = rectTransform;
+//        }
+//    }
+
+//#endif
     protected override void Start()
     {
         _orignalScale = _rectTransform.localScale;
