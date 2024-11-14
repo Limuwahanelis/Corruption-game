@@ -39,4 +39,8 @@ public class PauseSetter : MonoBehaviour
         if (value) OnPause?.Invoke();
         else OnResume?.Invoke();
     }
+    public static void ForceUnpause()
+    {
+        _isForcedPause = false;
+    }
 }

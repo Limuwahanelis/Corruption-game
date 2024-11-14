@@ -10,4 +10,11 @@ public class AudioSettings : MonoBehaviour
     public void SetMasterVolumee(float volume)=> AudioVolumes.SetMasterVolume(((int)volume));
     public void SetBGMVolume(float volume) => AudioVolumes.SetBGMVolume(((int)volume));
     public void SetSfxVolume(float volume) =>AudioVolumes.SetSFXVolume(((int)volume));
+
+    private void OnEnable()
+    {
+        _masterVolumeSlider.value = AudioVolumes.Master;
+        _BGMVolumeSlider.value = AudioVolumes.BGM;
+        _sfxVolumeSlider.value = AudioVolumes.SFX;
+    }
 }

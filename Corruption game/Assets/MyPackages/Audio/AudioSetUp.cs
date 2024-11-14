@@ -9,7 +9,7 @@ public class AudioSetUp : MonoBehaviour
         AudioSettingsData audioData;
         if (AudioSettingsSaver.LoadAudioSettings() == null)
         {
-            audioData = new AudioSettingsData(50,50,50);
+            audioData = new AudioSettingsData(50,50,70);
             AudioSettingsSaver.SaveAudioSettings(audioData);
         }
         else

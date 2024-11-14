@@ -19,9 +19,15 @@ public class PlayerCamera2D : MonoBehaviour
     private Vector3 _positionToFollow;
     private Vector3 _targetPos;
     private Vector3 _velocity = Vector3.zero;
+    private float _horizontalMax;
+    private float _verticalMax;
     // Start is called before the first frame update
     void Start()
     {
+        _horizontalMax = Camera.main.orthographicSize * Screen.width / Screen.height;
+        _verticalMax = Camera.main.orthographicSize;
+        _positionToFollow = transform.position;
+        //Logger.Log(Camera.main.orthographicSize*Screen.width/Screen.height);
         transform.position = _positionToFollow + offset;
     }
     public void SetPositionToFollowRaw(Vector3 pos)
@@ -29,20 +35,20 @@ public class PlayerCamera2D : MonoBehaviour
         _positionToFollow = pos;
         if (CheckForBorders)
         {
-            if (_positionToFollow.x < leftScreenBorder.position.x)
+            if (_positionToFollow.x -_horizontalMax < leftScreenBorder.position.x)
             {
                 _followOnXAxis = false;
-                _positionToFollow = new Vector3(leftScreenBorder.position.x, _positionToFollow.y);
+                _positionToFollow = new Vector3(leftScreenBorder.position.x + _horizontalMax, _positionToFollow.y);
             }
             else
             {
                 CheckIfPlayerIsOnRightScreenBorder();
             }
 
-            if (_positionToFollow.y < lowerScreenBorder.position.y)
+            if (_positionToFollow.y - _verticalMax < lowerScreenBorder.position.y)
             {
                 _followOnYAxis = false;
-                _positionToFollow = new Vector3(_positionToFollow.x, lowerScreenBorder.position.y, _positionToFollow.z);
+                _positionToFollow = new Vector3(_positionToFollow.x, lowerScreenBorder.position.y + _verticalMax, _positionToFollow.z);
 
             }
             else
@@ -59,20 +65,20 @@ public class PlayerCamera2D : MonoBehaviour
         _positionToFollow = pos;
         if (CheckForBorders)
         {
-            if (_positionToFollow.x < leftScreenBorder.position.x)
+            if (_positionToFollow.x - _horizontalMax < leftScreenBorder.position.x)
             {
                 _followOnXAxis = false;
-                _positionToFollow = new Vector3(leftScreenBorder.position.x, _positionToFollow.y);
+                _positionToFollow = new Vector3(leftScreenBorder.position.x + _horizontalMax, _positionToFollow.y);
             }
             else
             {
                 CheckIfPlayerIsOnRightScreenBorder();
             }
 
-            if (_positionToFollow.y < lowerScreenBorder.position.y)
+            if (_positionToFollow.y -_verticalMax < lowerScreenBorder.position.y)
             {
                 _followOnYAxis = false;
-                _positionToFollow = new Vector3(_positionToFollow.x, lowerScreenBorder.position.y, _positionToFollow.z);
+                _positionToFollow = new Vector3(_positionToFollow.x, lowerScreenBorder.position.y+_verticalMax, _positionToFollow.z);
 
             }
             else
@@ -105,10 +111,10 @@ public class PlayerCamera2D : MonoBehaviour
 
     private void CheckIfPlayerIsOnRightScreenBorder()
     {
-        if (_positionToFollow.x > rightScreenBorder.position.x)
+        if (_positionToFollow.x +_horizontalMax> rightScreenBorder.position.x)
         {
             _followOnXAxis = false;
-            _positionToFollow = new Vector3(rightScreenBorder.position.x, _positionToFollow.y);
+            _positionToFollow = new Vector3(rightScreenBorder.position.x- _horizontalMax, _positionToFollow.y);
         }
         else
         {
@@ -117,10 +123,10 @@ public class PlayerCamera2D : MonoBehaviour
     }
     private void CheckIfPlayerIsOnUpperScreenBorder()
     {
-        if (_positionToFollow.y > upperScreenBorder.position.y)
+        if (_positionToFollow.y +_verticalMax> upperScreenBorder.position.y)
         {
             _followOnYAxis = false;
-            _positionToFollow = new Vector3(_positionToFollow.x, upperScreenBorder.position.y, _positionToFollow.z);
+            _positionToFollow = new Vector3(_positionToFollow.x, upperScreenBorder.position.y- _verticalMax, _positionToFollow.z);
         }
         else
         {

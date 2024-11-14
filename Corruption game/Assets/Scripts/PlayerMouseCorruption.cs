@@ -20,6 +20,10 @@ public class PlayerMouseCorruption : MonoBehaviour
     {
         _canInteract = value;
     }
+    public void IncreaseCorruptionPerClick(int increase)
+    {
+        _corruptionPerClick += increase;
+    }
     public void TryCorrupt()
     {
         if (PauseSettings.IsGamePaused) return;

@@ -24,5 +24,6 @@ public class TestMissionManager : MissionManager
     private void OnSpawnerUnCorrupted(CorruptionComponent corruptionCom)
     {
         _corruptedSpawners--;
+        if(_corruptedSpawners <= 0) failMission();
     }
 }
