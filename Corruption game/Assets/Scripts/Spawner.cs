@@ -123,6 +123,11 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         }
 
     }
+    private void OnOriginaltargetDestroyed(IDamagable damagable)
+    {
+        damagable.OnDeath -= OnOriginaltargetDestroyed;
+        ChangeOriginaltarget();
+    }
     private void OnOriginalTargetCorrupted(CorruptionComponent corruptionComponent)
     {
         corruptionComponent.OnCorrupted.RemoveListener(OnOriginalTargetCorrupted);
@@ -146,6 +151,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             }
             _unitsOriginaltarget = closestSpawner.transform;
             closestSpawner.GetComponent<CorruptionComponent>().OnCorrupted.AddListener(OnOriginalTargetCorrupted);
+            closestSpawner.GetComponent<IDamagable>().OnDeath += OnOriginaltargetDestroyed;
             if (_isSelected) Interact();
         }
         else _spawn = false;
@@ -155,7 +161,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         _spawn = false;
         _time = 0;
         _corruptionComponent.UnCorrupt();
-        _spriteColor.ChangeColor(Color.white);
+        _spriteColor.ChangeColor(new Color(0.6886792f, 0.6886792f, 0.6886792f));
         if (_isPointedAt)
         {
             Deselect();

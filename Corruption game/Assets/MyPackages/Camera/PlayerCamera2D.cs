@@ -26,6 +26,7 @@ public class PlayerCamera2D : MonoBehaviour
     {
         _horizontalMax = Camera.main.orthographicSize * Screen.width / Screen.height;
         _verticalMax = Camera.main.orthographicSize;
+        _positionToFollow = transform.position;
         //Logger.Log(Camera.main.orthographicSize*Screen.width/Screen.height);
         transform.position = _positionToFollow + offset;
     }

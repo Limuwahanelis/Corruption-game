@@ -10,6 +10,7 @@ public class LoadScene : MonoBehaviour
     public void Load()
     {
         PauseSettings.SetPause(false);
+        PauseSetter.ForceUnpause();
         SceneManager.LoadScene(_sceneToLoad);
     }
     public void SetSceneIndex(int index)

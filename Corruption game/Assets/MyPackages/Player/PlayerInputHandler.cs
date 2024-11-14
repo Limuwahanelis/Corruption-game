@@ -36,5 +36,6 @@ public class PlayerInputHandler : MonoBehaviour
     {
         _isShowingTechnologymenu = !_isShowingTechnologymenu;
         _technologmenu.SetActive(_isShowingTechnologymenu);
+        _mouseInteractions.SetInteraction(!_isShowingTechnologymenu);
     }
 }
