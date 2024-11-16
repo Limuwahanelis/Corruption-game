@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class HelperClass : MonoBehaviour
 {
+    /// <summary>
+    /// Position of mouse in pixels on screen.
+    /// </summary>
     public static Vector3 MousePos => _mousePos;
     private static Vector2 _mousePos;
     public static void SetMousePos(Vector2 pos)

@@ -57,9 +57,4 @@ public class PlayerMouseInteractions : MonoBehaviour
         }
         //_corruptionSpriteSpawner.SpawnSprite().transform.position = point;
     }
-
-    public void SetShouldCloseProductsMenu(bool value)
-    {
-        _closeProductsMenu = value;
-    }
 }

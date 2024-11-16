@@ -7,6 +7,7 @@ public class LoadScene : MonoBehaviour
 {
     [SerializeField] int _sceneToLoad;
     [SerializeField] bool _loadOnStart;
+    private int aa;
     public void Load()
     {
         PauseSettings.SetPause(false);

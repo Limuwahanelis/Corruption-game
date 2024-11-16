@@ -28,10 +28,6 @@ public class CameraInputHandler : MonoBehaviour
         if(_moveCameraByKeyboard)
         {
           pos += _keyboardCamMove * _camMoveSpeed * Time.deltaTime;
-          //  if (_keyboardCamMove.x > 0) pos.x += _camMoveSpeed * Time.deltaTime;
-          //  if (_keyboardCamMove.x < 0) pos.x -= _camMoveSpeed * Time.deltaTime;
-          //  if (_keyboardCamMove.y > 0) pos.y += _camMoveSpeed * Time.deltaTime;
-          //  if (_keyboardCamMove.y < 0) pos.y -= _camMoveSpeed * Time.deltaTime;
         }
         _cam.SetPositionToFollow(pos);
     }
@@ -42,8 +38,6 @@ public class CameraInputHandler : MonoBehaviour
         Vector2 pos = _cam.PositionToFollow;
         Logger.Log(value.Get<Vector2>());
         _keyboardCamMove = value.Get<Vector2>();
-
-       // _cam.SetPositionToFollow(pos);
     }
     void OnMoveCameraByMouse(InputValue value)
     {
@@ -54,12 +48,9 @@ public class CameraInputHandler : MonoBehaviour
     {
         Vector2 pos = _cam.PositionToFollow;
         Vector2 delta= value.Get<Vector2>();
-       // Logger.Log(delta);
         if (_moveCameraByMouse)
         {
             pos -= delta* _camMoveSpeed * Time.deltaTime;
-            //if (delta.x > 0) pos.x += _camMoveSpeed * Time.deltaTime;
-            //if (delta.x < 0) pos.x -= _camMoveSpeed * Time.deltaTime;
             _cam.SetPositionToFollowRaw(pos);
         }
     }

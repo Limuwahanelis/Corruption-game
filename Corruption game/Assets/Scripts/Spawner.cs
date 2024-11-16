@@ -11,6 +11,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [Header("Spawner settings")]
     [SerializeField] bool _spawnOnStart;
     [SerializeField] bool _spawn;
+    [SerializeField] float _corruptionRadius;
     [SerializeField] float _spawnRate;
     [SerializeField] bool _playerInteractable;
     [SerializeField] int _firstTimeCorruptionTechnologyValue;
@@ -31,6 +32,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [SerializeField] CorruptionComponent _corruptionComponent;
     [SerializeField] SpriteColor _spriteColor;
     [SerializeField] MyColor _corruptionColor;
+    [SerializeField] CorruptTiles _corruptTiles;
     [Header("Mouse interactions")]
     [SerializeField] GameObject _hoverBorder;
     [SerializeField] GameObject _destroyedHoverBorder;
@@ -41,17 +43,24 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     private bool _isPointedAt=false;
     private void Awake()
     {
+        
         _spawners.AddSpawnerToList(this);
         _corruptionComponent.SetTechnologyPointsvalue(_firstTimeCorruptionTechnologyValue);
         _healthSystem.OnDeath += DestroySpawner;
     }
     private void Start()
     {
+        if (_corruptionComponent.IsCorrupted) _corruptTiles.CorruptTileRadius(transform.position, _corruptionRadius);
         ChangeOriginaltarget();
         if (_spawnOnStart)
         {
             Spawn();
         }
+    }
+    private void Reset()
+    {
+        _lineRenderer = FindObjectOfType<LineRenderer>();
+        _corruptTiles = FindObjectOfType<CorruptTiles>();
     }
     public void Spawn()
     {
@@ -169,6 +178,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             _destroyedHoverBorder.SetActive(true);
         }
     }
+    // used by corruption component
     public void CorruptSpawner(CorruptionComponent corruptionComponent)
     {
         _time = 0;
