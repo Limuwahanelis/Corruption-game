@@ -7,9 +7,9 @@ public class Monster : Unit
 {
     [Header("Monster")]
     [SerializeField] TargetDetector _detector;
-    [SerializeField] Transform _mainBody;
     [SerializeField] float _rangeFromTarget;
     [SerializeField] ListOfSpawners _spawnersList;
+    
     private Coroutine _attackCor;
     private float _timer;
     private float _hpDeacyTimer = 0;
@@ -236,15 +236,16 @@ public class Monster : Unit
     private void OnDestroy()
     {
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
+        _listOfActiveUnits.RemoveGameobject(gameObject);
     }
     public override void Death(IDamagable damagable)
     {
-        Logger.Log($"{gameObject.name} has died");
+        //Logger.Log($"{gameObject.name} has died");
         if(_originalTarget != null) 
         {
             if (_originalTarget.damagable != null) _originalTarget.damagable.OnDeath -= GetNewOriginaltarget;
             if (_originalTarget.corruptionComponent != null) _originalTarget.corruptionComponent.OnCorrupted.RemoveListener(GetNewOriginaltarget);
-            Logger.Log($"{gameObject.name} Removed original target");
+            //Logger.Log($"{gameObject.name} Removed original target");
         }
         if(_target != null) 
         {
@@ -253,7 +254,7 @@ public class Monster : Unit
                 if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
                 if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
             }
-            Logger.Log($"{gameObject.name} Removed target");
+            //Logger.Log($"{gameObject.name} Removed target");
         }
         if (_corruptionComponent.IsCorrupted)
         {

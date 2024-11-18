@@ -482,6 +482,7 @@ MonoBehaviour:
     factionAllegiance: {fileID: 0}
     name: 
   _spriteColor: {fileID: 4037608689312361046}
+  _listOfActiveUnits: {fileID: 11400000, guid: 1f762e2e4ae577246b81ebf39d76e824, type: 2}
   _detector: {fileID: 2762296266781645361}
   _mainBody: {fileID: 3430786072956781645}
   _rangeFromTarget: 2

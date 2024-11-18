@@ -51,7 +51,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     }
     private void Start()
     {
-        if (_corruptionComponent.IsCorrupted) _corruptTiles.CorruptTileRadius(transform.position, _corruptionRadius);
+        //if (_corruptionComponent.IsCorrupted) _corruptTiles.CorruptTileRadius(transform.position, _corruptionRadius);
         ChangeOriginaltarget();
         if (_spawnOnStart)
         {
