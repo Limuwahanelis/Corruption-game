@@ -125,7 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5013193864429371128}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: Spawn (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,12 +139,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3130685348127170736}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.82, y: 0.07000017, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.8200002, y: 0.07000017, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8860880824874139916}
+  m_Father: {fileID: 8921969568013173901}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3390207795074772158
 GameObject:
@@ -156,7 +156,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2821960883636450581}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,12 +170,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3390207795074772158}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.82, y: 1.85, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.8200002, y: 1.8500001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8860880824874139916}
+  m_Father: {fileID: 8921969568013173901}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4563170502168018915
 GameObject:
@@ -261,6 +261,39 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &5356282848649363096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8921969568013173901}
+  m_Layer: 0
+  m_Name: SpawnPositions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8921969568013173901
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5356282848649363096}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2821960883636450581}
+  - {fileID: 5013193864429371128}
+  m_Father: {fileID: 8860880824874139916}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8261011036246654817
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,7 +308,7 @@ GameObject:
   - component: {fileID: 4540301264043375363}
   - component: {fileID: 6675014217321263546}
   m_Layer: 8
-  m_Name: Capsule
+  m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -457,8 +490,7 @@ Transform:
   - {fileID: 3743065310516390031}
   - {fileID: 5353523306619286931}
   - {fileID: 666752628769861519}
-  - {fileID: 2821960883636450581}
-  - {fileID: 5013193864429371128}
+  - {fileID: 8921969568013173901}
   - {fileID: 9020246205309031912}
   - {fileID: 7740036142285750691}
   - {fileID: 1994669657177408087}
@@ -478,8 +510,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnOnStart: 1
   _spawn: 0
+  _corruptionRadius: 0
   _spawnRate: 3
-  _playerInteractable: 0
   _firstTimeCorruptionTechnologyValue: 0
   _poolsList: {fileID: 11400000, guid: 68e5e49c1e201a346aaeab32eaddcb2f, type: 2}
   _spawners: {fileID: 11400000, guid: 01e984d2dc84d9441939255bfc7881db, type: 2}
@@ -491,13 +523,14 @@ MonoBehaviour:
   _spawnNumber: 01000000
   _corruptedUnitsSpawnNumber: 03000000
   _healthSystem: {fileID: 5297800181531713693}
-  _lineRenderer: {fileID: 0}
   _linePoint: {fileID: 7740036142285750691}
-  _unitsOriginaltarget: {fileID: 0}
   _factionAllegiance: {fileID: 7211177626525165710}
   _corruptionComponent: {fileID: 5196706309773750875}
   _spriteColor: {fileID: 4540301264043375363}
   _corruptionColor: {fileID: 11400000, guid: 1348533493c178d4c9d96fd238d8e860, type: 2}
+  _sourcePool: {fileID: 0}
+  _lineRenderer: {fileID: 0}
+  _corruptTiles: {fileID: 0}
   _hoverBorder: {fileID: 4563170502168018915}
   _destroyedHoverBorder: {fileID: 415782279060740522}
   _selectedBorder: {fileID: 9024403778450419348}
@@ -606,12 +639,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1930062492461676835}
+        m_TargetAssemblyTypeName: Spawner, Assembly-CSharp
+        m_MethodName: UnCorruptSpawner
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _corruptOnStart: 0
   _corruptionBar: {fileID: 8067074674966447672}
   _onFirstTimeCorruptedEvent: {fileID: 0}
   _maxCorruption: 100
   _corruptionDecrease: 2
   _corrutptionReduceInterval: 1
-  _isCorrupted: 0
 --- !u!114 &7211177626525165710
 MonoBehaviour:
   m_ObjectHideFlags: 0

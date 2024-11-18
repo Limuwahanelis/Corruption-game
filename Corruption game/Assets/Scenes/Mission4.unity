@@ -291,6 +291,7 @@ Transform:
   - {fileID: 145252485}
   - {fileID: 1960555558}
   - {fileID: 1575475467}
+  - {fileID: 264572356}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &145252483
@@ -2370,6 +2371,53 @@ Transform:
   - {fileID: 1945020953}
   m_Father: {fileID: 286894940}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &264572355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 264572356}
+  - component: {fileID: 264572357}
+  m_Layer: 0
+  m_Name: Corrupiton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &264572356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264572355}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 103507940}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &264572357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264572355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56f345ffc963be24eb1eac6a01524e82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _corruptionColor: {fileID: 11400000, guid: 1348533493c178d4c9d96fd238d8e860, type: 2}
+  map: {fileID: 2034599005}
+  _corruptionDelay: 0.5
 --- !u!1001 &275441945
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2395,12 +2443,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1770809867}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptTiles
+      value: 
+      objectReference: {fileID: 264572357}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _lineRenderer
       value: 
       objectReference: {fileID: 1575475468}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnOnStart
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptionRadius
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnNumber.Array.data[0]
@@ -2573,12 +2629,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1770809867}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptTiles
+      value: 
+      objectReference: {fileID: 264572357}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _lineRenderer
       value: 
       objectReference: {fileID: 1575475468}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnOnStart
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptionRadius
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnNumber.Array.data[0]
@@ -5482,12 +5546,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1770809867}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptTiles
+      value: 
+      objectReference: {fileID: 264572357}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _lineRenderer
       value: 
       objectReference: {fileID: 1575475468}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnOnStart
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptionRadius
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnNumber.Array.data[0]
@@ -5917,12 +5989,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1770809867}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptTiles
+      value: 
+      objectReference: {fileID: 264572357}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _lineRenderer
       value: 
       objectReference: {fileID: 1575475468}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnOnStart
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptionRadius
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnNumber.Array.data[0]
@@ -7847,12 +7927,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1770809867}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptTiles
+      value: 
+      objectReference: {fileID: 264572357}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _lineRenderer
       value: 
       objectReference: {fileID: 1575475468}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnOnStart
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptionRadius
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnNumber.Array.data[0]
@@ -7964,12 +8052,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1770809867}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptTiles
+      value: 
+      objectReference: {fileID: 264572357}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _lineRenderer
       value: 
       objectReference: {fileID: 1575475468}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnOnStart
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptionRadius
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnNumber.Array.data[0]
@@ -8307,12 +8403,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1770809867}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptTiles
+      value: 
+      objectReference: {fileID: 264572357}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _lineRenderer
       value: 
       objectReference: {fileID: 1575475468}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnOnStart
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _corruptionRadius
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawnNumber.Array.data[0]
