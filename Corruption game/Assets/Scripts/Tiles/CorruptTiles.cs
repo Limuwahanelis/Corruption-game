@@ -56,7 +56,6 @@ public class CorruptTiles : MonoBehaviour
     }
     public void CorruptTileRadius(Vector2 _pos,float radius)
     {
-        Logger.Log("Corrupt");
         map.WorldToCell(_pos);
         if (map.GetTile(map.WorldToCell(_pos)))
         {
@@ -69,7 +68,6 @@ public class CorruptTiles : MonoBehaviour
     }
     public void UncorruptTiles(Vector2 _pos, float radius)
     {
-        Logger.Log("UNcoir");
         map.WorldToCell(_pos);
         if (map.GetTile(map.WorldToCell(_pos)))
         {

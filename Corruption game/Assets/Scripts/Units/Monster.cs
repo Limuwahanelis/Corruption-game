@@ -59,13 +59,6 @@ public class Monster : Unit
 
                     };
                     _attackCor=StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () => DealDMG(_originalTarget)));
-                    //StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
-                    //{
-                    //    _animManager.PlayAnimation("Empty");
-                    //    if (_originalTarget == null) return;
-                    //    _originalTarget.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
-
-                    //}));
 
                     _timer = 0;
                 }
@@ -114,13 +107,40 @@ public class Monster : Unit
     }
     private void GetNewOriginaltarget(CorruptionComponent corruption)
     {
-        if (_spawnCorrupted)
-        {
-            _spawnCorrupted = false;
-            return;
-        }
         corruption.OnCorrupted.RemoveListener(GetNewOriginaltarget);
         List<Spawner> spawners = _spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance);
+        if (spawners != null && spawners.Count > 0)
+        {
+            Spawner closestSpawner = spawners[0];
+            float shortestDist = Vector3.Distance(transform.position, closestSpawner.transform.position);
+            for (int i = 1; i < spawners.Count; i++)
+            {
+                float dist = Vector3.Distance(spawners[i].transform.position, transform.position);
+                if (dist < shortestDist)
+                {
+                    closestSpawner = spawners[i];
+                    shortestDist = dist;
+                }
+            }
+            SetOriginaltarget(closestSpawner.transform, closestSpawner.GetComponent<IDamagable>(), closestSpawner.GetComponent<CorruptionComponent>());
+        }
+        else enabled = false; 
+    }
+    private void GetNewOriginaltarget(IDamagable damageable)
+    {
+        _timer = 0;
+        if (_attackCor != null)
+        {
+            StopCoroutine(_attackCor);
+            _animManager.PlayAnimation("Empty");
+        }
+        damageable.OnDeath-=GetNewOriginaltarget;
+        List<Spawner> spawners = new List<Spawner>();
+        if (_corruptionComponent.IsCorrupted)
+        {
+            spawners.AddRange(_spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance));
+        }
+        else spawners.AddRange(_spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance && x.GetComponent<IDamagable>().IsAlive));
         if (spawners != null && spawners.Count > 0)
         {
             Spawner closestSpawner = spawners[0];
@@ -142,47 +162,7 @@ public class Monster : Unit
             //    damagable = closestSpawner.GetComponent<IDamagable>(),
             //};
         }
-        else enabled = false; //Logger.Error("NO MORE SPAWNERS TO ATTACK");
-        // TODO: Do smth when no more spanwers to attack.
-    }
-    private void GetNewOriginaltarget(IDamagable damageable)
-    {
-        _timer = 0;
-        if (_attackCor != null)
-        {
-            StopCoroutine(_attackCor);
-            _animManager.PlayAnimation("Empty");
-        }
-        damageable.OnDeath-=GetNewOriginaltarget;
-        List<Spawner> spawners = new List<Spawner>();
-        if (_corruptionComponent.IsCorrupted)
-        {
-            spawners.AddRange(_spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance));
-        }
-        else spawners.AddRange(_spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance && x.GetComponent<IDamagable>().IsAlive));
-        //List<Spawner> spawners = _spawnersList.Spawners.FindAll(x => x.GetComponent<FactionAllegiance>().Allegiance != _factionAllegiance.Allegiance);
-        if (spawners != null && spawners.Count > 0)
-        {
-            Spawner closestSpawner = spawners[0];
-            float shortestDist = Vector3.Distance(transform.position, closestSpawner.transform.position);
-            for (int i = 1; i < spawners.Count; i++)
-            {
-                float dist = Vector3.Distance(spawners[i].transform.position, transform.position);
-                if (dist < shortestDist)
-                {
-                    closestSpawner = spawners[i];
-                    shortestDist = dist;
-                }
-            }
-            _originalTarget = new TargetDetector.Target()
-            {
-                tran = closestSpawner.transform,
-                corruptionComponent = closestSpawner.GetComponent<CorruptionComponent>(),
-                damagable = closestSpawner.GetComponent<IDamagable>(),
-            };
-        }
-        else enabled = false; //Logger.Error("NO MORE SPAWNERS TO ATTACK");
-        // TODO: Do smth when no more spanwers to attack.
+        else enabled = false;
     }
     public void SetTarget(TargetDetector.Target target)
     {
@@ -202,7 +182,7 @@ public class Monster : Unit
         if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
         _target = null;
-        UpdateTargets();
+        SetTarget(_detector.GetClosestTarget(_mainBody));
     }
     private void OnTargetDestroyed(IDamagable damagable)
     {
@@ -227,6 +207,7 @@ public class Monster : Unit
         GetNewOriginaltarget(corruption);
         UpdateTargets();
     }
+    // When unit change alleginace (e.g corruption) it needs new targets
     private void UpdateTargets()
     {
         _detector.UpdateTargetList();
