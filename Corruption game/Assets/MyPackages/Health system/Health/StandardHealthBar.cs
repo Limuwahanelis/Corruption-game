@@ -15,13 +15,20 @@ public class StandardHealthBar : HealthBar
     [SerializeField] int _lazyHPLostPerSecond;
     private float _lazyHP;
     private int _currentHP;
+    private bool _initialized = false;
     bool _isReducingHP;
     private void Awake()
     {
+        Initialize();
+    }
+    public override void Initialize()
+    {
+        if(_initialized) return;
         if (_propertyBlock == null) _propertyBlock = new MaterialPropertyBlock();
         _renderer = GetComponent<Renderer>();
         _renderer.SetPropertyBlock(_propertyBlock);
         _lazyHP = _currentHP = _maxHP;
+        _initialized = true;
     }
     public override void SetHealth(int hp)
     {

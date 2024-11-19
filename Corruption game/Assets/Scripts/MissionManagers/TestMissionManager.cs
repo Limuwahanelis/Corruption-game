@@ -12,6 +12,7 @@ public class TestMissionManager : MissionManager
         for(int i=0; i< _listOfSpawners.Spawners.Count; i++) 
         {
             CorruptionComponent corruptionCom = _listOfSpawners.Spawners[i].GetComponent<CorruptionComponent>();
+            if(corruptionCom.IsCorrupted) _corruptedSpawners++;
             corruptionCom.OnCorrupted.AddListener(OnSpawnerCorrupted);
             corruptionCom.OnUnCorrupted.AddListener(OnSpawnerUnCorrupted);
         }

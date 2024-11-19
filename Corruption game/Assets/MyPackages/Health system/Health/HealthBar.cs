@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public abstract class HealthBar : MonoBehaviour
 {
+    public virtual void Initialize() { }
     public abstract void SetHealth(int hp);
     public abstract void SetMaxHealth(int value);
     public abstract void ReduceHP(int value);

@@ -24,12 +24,15 @@ public class HealthSystem : MonoBehaviour,IDamagable
     protected bool _isInvincibleToDamage = false;
 
 
-
+    private void Awake()
+    {
+        if (_hpBar) _hpBar.Initialize();
+    }
 
     // Start is called before the first frame update
     protected void Start()
     {
-
+        
         if(_hpBar!=null)_hpBar.SetMaxHealth(_maxHP);
         _currentHP = _maxHP;
         if (_hpBar != null) _hpBar.SetHealth(_currentHP);

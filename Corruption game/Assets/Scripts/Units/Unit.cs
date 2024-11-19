@@ -38,13 +38,12 @@ public abstract class Unit : MonoBehaviour
         _pool.Release(this);
         ResetUnit();
     }
-    public virtual void SetUp(AudioSourcePool audioSourcePool)
+    public virtual void SetUp(AudioSourcePool audioSourcePool,bool isCorrupted)
     {
         _audioSourcePool = audioSourcePool;
         _healthSystem.SetMacHP(_unitData.MaxHP);
         _factionAllegiance.SetAllegiance(_unitData.OriginalAllegiance);
-        _corruptionComponent.SetMaxCorruption(_unitData.MaxCorruption);
-        _corruptionComponent.SetUp(_unitData.CorruptionreductionIntervalInSeconds, _unitData.CorruptionReductionValue);
+        _corruptionComponent.SetUp(_unitData.CorruptionreductionIntervalInSeconds, _unitData.CorruptionReductionValue, isCorrupted, _unitData.TechnologyValue, _unitData.MaxCorruption);
         _healthSystem.OnDeath += Death;
         _healthSystem.ResetHealth();
     }

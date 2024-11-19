@@ -14,14 +14,13 @@ public class Monster : Unit
     private float _timer;
     private float _hpDeacyTimer = 0;
     private DamageInfo _sefDMG=new DamageInfo();
-    public override void SetUp(AudioSourcePool audioSourcePool)
+    public override void SetUp(AudioSourcePool audioSourcePool, bool isCorrupted)
     {
-        base.SetUp(audioSourcePool);
+        _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
+        base.SetUp(audioSourcePool,isCorrupted);
         _sefDMG.dmg = _unitData.CorruptionHPDecayValue;
         _sefDMG.dmgPosition=_mainBody.position;
-        _corruptionComponent.ResetCorruption(_unitData.TechnologyValue);
         _detector.OnTargetDetected.AddListener(SetTarget);
-        _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
     }
     private void Update()
     {

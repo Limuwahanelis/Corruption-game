@@ -46,7 +46,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     {
         
         _spawners.AddSpawnerToList(this);
-        _corruptionComponent.SetTechnologyPointsvalue(_firstTimeCorruptionTechnologyValue);
+        _corruptionComponent.SetUp(0,0,_corruptionComponent.IsCorrupted,_firstTimeCorruptionTechnologyValue,_corruptionComponent.MaxCorruption);
         _healthSystem.OnDeath += DestroySpawner;
     }
     private void Start()
@@ -74,10 +74,10 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             {
                 Unit unit = _poolsList.Pools[_poolIndex].GetUnit();
                 unit.gameObject.name = $"{_index} {_corruptionComponent.IsCorrupted}";
-                unit.SetUp(_sourcePool);
+                unit.SetUp(_sourcePool,_corruptionComponent.IsCorrupted);
                 unit.transform.position = _spawnTran[_spawnIndex].position;
                 unit.SetOriginaltarget(_unitsOriginaltarget, _unitsOriginaltarget.GetComponent<IDamagable>(), _unitsOriginaltarget.GetComponent<CorruptionComponent>());
-                if (_corruptionComponent.IsCorrupted) unit.Corrupt();
+                //if (_corruptionComponent.IsCorrupted) unit.Corrupt();
                 _spawnIndex++;
                 if (_spawnIndex >= _spawnTran.Count)
                 {

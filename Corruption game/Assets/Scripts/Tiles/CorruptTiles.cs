@@ -49,7 +49,7 @@ public class CorruptTiles : MonoBehaviour
         {
             posE.x = (int)_listOfActiveUnits.GameObjects[i].GetComponent<Unit>().MainBody.position.x;
             posE.y = (int)_listOfActiveUnits.GameObjects[i].GetComponent<Unit>().MainBody.position.y;
-            if (_corruptedTiles.Exists(x=>x.position==posE)) Logger.Log("FSSFSFSFSF");
+           // if (_corruptedTiles.Exists(x=>x.position==posE)) Logger.Log("FSSFSFSFSF");
         }
         if (Input.GetKeyDown(KeyCode.C)) CorruptTileRadius(Vector2.zero, 3);
         if (Input.GetKeyDown(KeyCode.U)) UncorruptTiles(Vector2.zero, 3);
