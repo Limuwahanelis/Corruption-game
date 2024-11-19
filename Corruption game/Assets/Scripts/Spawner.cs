@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+[SelectionBase]
 public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPointerExitHandler
 {
     public Transform LinePoint => _linePoint;
@@ -11,8 +12,8 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [Header("Spawner settings")]
     [SerializeField] bool _spawnOnStart;
     [SerializeField] bool _spawn;
+    [SerializeField] float _corruptionRadius;
     [SerializeField] float _spawnRate;
-    [SerializeField] bool _playerInteractable;
     [SerializeField] int _firstTimeCorruptionTechnologyValue;
     [SerializeField] ListOfPools _poolsList;
     [SerializeField] ListOfSpawners _spawners;
@@ -22,36 +23,45 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [SerializeField] List<int> _spawnNumber;
     [SerializeField] List<int> _corruptedUnitsSpawnNumber;
     [Header("Components")]
-    [SerializeField] AudioSourcePool _sourcePool;
     [SerializeField] HealthSystem _healthSystem;
-    [SerializeField] LineRenderer _lineRenderer;
     [SerializeField] Transform _linePoint;
-    [SerializeField] Transform _unitsOriginaltarget;
     [SerializeField] FactionAllegiance _factionAllegiance;
     [SerializeField] CorruptionComponent _corruptionComponent;
     [SerializeField] SpriteColor _spriteColor;
     [SerializeField] MyColor _corruptionColor;
+    [Header("Assigned from scene")]
+    [SerializeField] AudioSourcePool _sourcePool;
+    [SerializeField] LineRenderer _lineRenderer;
+    [SerializeField] CorruptTiles _corruptTiles;
     [Header("Mouse interactions")]
     [SerializeField] GameObject _hoverBorder;
     [SerializeField] GameObject _destroyedHoverBorder;
     [SerializeField] GameObject _selectedBorder;
+    private Transform _unitsOriginaltarget;
     private bool _isSelected = false;
     private float _time = 0;
     private float _index = 0;
     private bool _isPointedAt=false;
     private void Awake()
     {
+        
         _spawners.AddSpawnerToList(this);
         _corruptionComponent.SetTechnologyPointsvalue(_firstTimeCorruptionTechnologyValue);
         _healthSystem.OnDeath += DestroySpawner;
     }
     private void Start()
     {
+        //if (_corruptionComponent.IsCorrupted) _corruptTiles.CorruptTileRadius(transform.position, _corruptionRadius);
         ChangeOriginaltarget();
         if (_spawnOnStart)
         {
             Spawn();
         }
+    }
+    private void Reset()
+    {
+        _lineRenderer = FindObjectOfType<LineRenderer>();
+        _corruptTiles = FindObjectOfType<CorruptTiles>();
     }
     public void Spawn()
     {
@@ -169,11 +179,13 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             _destroyedHoverBorder.SetActive(true);
         }
     }
+    // used by corruption component
     public void CorruptSpawner(CorruptionComponent corruptionComponent)
     {
         _time = 0;
         _spawn = true;
         _healthSystem.Heal(_healthSystem.MaxHP);
+        _corruptTiles.CorruptTileRadius(transform.position,_corruptionRadius);
         ChangeOriginaltarget();
         _spriteColor.ChangeColor(_corruptionColor.Color);
         if(_destroyedHoverBorder.activeSelf)
@@ -182,6 +194,15 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             _hoverBorder.SetActive(true);
         }
 
+    }
+    public void UnCorruptSpawner()
+    {
+        _corruptTiles.UncorruptTiles(transform.position, _corruptionRadius);
+        //if (_destroyedHoverBorder.activeSelf)
+        //{
+        //    _destroyedHoverBorder.SetActive(false);
+        //    _hoverBorder.SetActive(true);
+        //}
     }
 
     public void OnPointerExit(PointerEventData eventData)

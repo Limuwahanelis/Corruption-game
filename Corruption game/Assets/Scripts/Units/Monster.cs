@@ -7,9 +7,9 @@ public class Monster : Unit
 {
     [Header("Monster")]
     [SerializeField] TargetDetector _detector;
-    [SerializeField] Transform _mainBody;
     [SerializeField] float _rangeFromTarget;
     [SerializeField] ListOfSpawners _spawnersList;
+    
     private Coroutine _attackCor;
     private float _timer;
     private float _hpDeacyTimer = 0;
@@ -99,15 +99,23 @@ public class Monster : Unit
             }
         }
     }
-    public override void SetOriginaltarget(Transform target, IDamagable damagable, CorruptionComponent corruption)
+    public override void SetOriginaltarget(Transform originalTargetTran, IDamagable originaltargetDamagable, CorruptionComponent originaltargetCorruption)
     {
-        base.SetOriginaltarget(target, damagable, corruption);
-        if (corruption != null) corruption.OnCorrupted.AddListener(GetNewOriginaltarget);
-        if (damagable != null) damagable.OnDeath += GetNewOriginaltarget;
+        if(_originalTarget!=null)
+        {
+            if(_originalTarget.tran!=null)
+            {
+                if (_originalTarget.damagable != null) _originalTarget.damagable.OnDeath -= GetNewOriginaltarget;
+                if (_originalTarget.corruptionComponent != null) _originalTarget.corruptionComponent.OnCorrupted.RemoveListener(GetNewOriginaltarget);
+            }
+        }
+        base.SetOriginaltarget(originalTargetTran, originaltargetDamagable, originaltargetCorruption);
+        if (originaltargetCorruption != null) originaltargetCorruption.OnCorrupted.AddListener(GetNewOriginaltarget);
+        if (originaltargetDamagable != null) originaltargetDamagable.OnDeath += GetNewOriginaltarget;
     }
     private void GetNewOriginaltarget(CorruptionComponent corruption)
     {
-        if(_spawnCorrupted)
+        if (_spawnCorrupted)
         {
             _spawnCorrupted = false;
             return;
@@ -127,12 +135,13 @@ public class Monster : Unit
                     shortestDist = dist;
                 }
             }
-            _originalTarget = new TargetDetector.Target()
-            {
-                tran = closestSpawner.transform,
-                corruptionComponent = closestSpawner.GetComponent<CorruptionComponent>(),
-                damagable = closestSpawner.GetComponent<IDamagable>(),
-            };
+            SetOriginaltarget(closestSpawner.transform, closestSpawner.GetComponent<IDamagable>(), closestSpawner.GetComponent<CorruptionComponent>());
+            //_originalTarget = new TargetDetector.Target()
+            //{
+            //    tran = closestSpawner.transform,
+            //    corruptionComponent = closestSpawner.GetComponent<CorruptionComponent>(),
+            //    damagable = closestSpawner.GetComponent<IDamagable>(),
+            //};
         }
         else enabled = false; //Logger.Error("NO MORE SPAWNERS TO ATTACK");
         // TODO: Do smth when no more spanwers to attack.
@@ -189,6 +198,7 @@ public class Monster : Unit
     }
     private void OnTargetCorrupted(CorruptionComponent corruptionComponent)
     {
+        
         corruptionComponent.GetComponent<Unit>().SetOriginaltarget(_originalTarget.tran,_originalTarget.damagable,_originalTarget.corruptionComponent);
         if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
@@ -226,9 +236,26 @@ public class Monster : Unit
     private void OnDestroy()
     {
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
+        _listOfActiveUnits.RemoveGameobject(gameObject);
     }
     public override void Death(IDamagable damagable)
     {
+        //Logger.Log($"{gameObject.name} has died");
+        if(_originalTarget != null) 
+        {
+            if (_originalTarget.damagable != null) _originalTarget.damagable.OnDeath -= GetNewOriginaltarget;
+            if (_originalTarget.corruptionComponent != null) _originalTarget.corruptionComponent.OnCorrupted.RemoveListener(GetNewOriginaltarget);
+            //Logger.Log($"{gameObject.name} Removed original target");
+        }
+        if(_target != null) 
+        {
+            if(_target.tran!=null)
+            {
+                if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
+                if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
+            }
+            //Logger.Log($"{gameObject.name} Removed target");
+        }
         if (_corruptionComponent.IsCorrupted)
         {
             GameObject source = _audioSourcePool.GetSource();

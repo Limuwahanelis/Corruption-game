@@ -7,7 +7,8 @@ public abstract class Unit : MonoBehaviour
 {
     public HealthSystem HealthSystem=>_healthSystem;
     public Allegiance Allegiance => _allegiance;
-    
+    public Transform MainBody => _mainBody;
+
     [SerializeField] Transform _testOriginalTarget;
     [SerializeField] protected UnitData _unitData;
     [SerializeField] protected MyColor _corruptionColor;
@@ -21,16 +22,19 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] Allegiance _corruptionAllegiance;
     [SerializeField] protected TargetDetector.Target _originalTarget;
     [SerializeField] protected SpriteColor _spriteColor;
+    [SerializeField] protected ListOfGameobjects _listOfActiveUnits;
+    [SerializeField] protected Transform _mainBody;
     protected Allegiance _allegiance;
     protected IObjectPool<Unit> _pool;
     protected TargetDetector.Target _target = null;
     protected bool _spawnCorrupted;
     private void Start()
     {
-
+        _listOfActiveUnits.AddGameobject(gameObject);
     }
     public virtual void Death(IDamagable damagable)
     {
+        _listOfActiveUnits.RemoveGameobject(gameObject);
         _pool.Release(this);
         ResetUnit();
     }

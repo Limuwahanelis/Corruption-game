@@ -49,7 +49,7 @@ public class PlayerMouseCorruption : MonoBehaviour
         else
         {
             Collider2D col = _cameraRaycast.Raycast(out point, out float width, _corruptioMmask);
-            Logger.Log(col, this);
+           // Logger.Log(col, this);
             if (col)
             {
                 _corruptable = col.attachedRigidbody.GetComponent<IMouseCorruptable>();

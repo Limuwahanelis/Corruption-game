@@ -9,8 +9,6 @@ public class PlayerMouseInteractions : MonoBehaviour
     [SerializeField] LayerMask _interactionMask;
     private IMouseInteractable _interactable;
     private IMouseInteractable _selectedInteractable;
-    private bool _closeProductsMenu=true;
-    private Vector3 _productsMenuPos;
     private bool _canInteract=true;
     public void SetInteraction(bool value)
     {
@@ -56,10 +54,5 @@ public class PlayerMouseInteractions : MonoBehaviour
             _selectedInteractable = _interactable;
         }
         //_corruptionSpriteSpawner.SpawnSprite().transform.position = point;
-    }
-
-    public void SetShouldCloseProductsMenu(bool value)
-    {
-        _closeProductsMenu = value;
     }
 }
