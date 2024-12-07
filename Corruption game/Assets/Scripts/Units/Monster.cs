@@ -182,6 +182,7 @@ public class Monster : Unit
         if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
         _target = null;
+        _detector.UpdateTargetList();
         SetTarget(_detector.GetClosestTarget(_mainBody));
     }
     private void OnTargetDestroyed(IDamagable damagable)
