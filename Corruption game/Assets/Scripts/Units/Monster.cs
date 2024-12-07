@@ -58,6 +58,7 @@ public class Monster : Unit
                         x.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
 
                     };
+                    if (!isActiveAndEnabled) return;
                     _attackCor=StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () => DealDMG(_originalTarget)));
 
                     _timer = 0;
@@ -75,6 +76,7 @@ public class Monster : Unit
                 _timer += Time.deltaTime;
                 if(_timer>_unitData.AttackInterval)
                 {
+                    if (!isActiveAndEnabled) return;
                     _animManager.Animator.SetFloat("Angle", -Vector2.SignedAngle(Vector2.up, (_target.tran.position - _mainBody.position).normalized));
                     if (_mainBody.position.x < _target.tran.position.x) _animManager.PlayAnimation("Attack");
                     else _animManager.PlayAnimation("Attack");
