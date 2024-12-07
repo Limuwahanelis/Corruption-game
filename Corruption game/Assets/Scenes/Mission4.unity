@@ -2420,9 +2420,6 @@ MonoBehaviour:
   _corruptionDelay: 0.5
   _listOfActiveUnits: {fileID: 11400000, guid: 1f762e2e4ae577246b81ebf39d76e824, type: 2}
   Vector3Int: {x: 0, y: 0, z: 0}
-  Bounds:
-    m_Position: {x: 0, y: 0, z: 0}
-    m_Size: {x: 0, y: 0, z: 0}
 --- !u!1001 &275441945
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2431,6 +2428,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 452392092}
     m_Modifications:
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _data
+      value: 
+      objectReference: {fileID: 11400000, guid: af2c84abe97932d498fb7c044c00e452, type: 2}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawn
       value: 1
@@ -2559,6 +2560,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player spawner
       objectReference: {fileID: 0}
+    - target: {fileID: 8947972139218895636, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: m_Name
+      value: Corruption bar
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2617,6 +2622,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 452392092}
     m_Modifications:
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _data
+      value: 
+      objectReference: {fileID: 11400000, guid: af2c84abe97932d498fb7c044c00e452, type: 2}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawn
       value: 1
@@ -16875,6 +16884,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 452392092}
     m_Modifications:
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _data
+      value: 
+      objectReference: {fileID: 11400000, guid: af2c84abe97932d498fb7c044c00e452, type: 2}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawn
       value: 1
       objectReference: {fileID: 0}
@@ -17317,6 +17330,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 452392092}
     m_Modifications:
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _data
+      value: 
+      objectReference: {fileID: 11400000, guid: 62aa7771b173c474799521a8dc2f3b16, type: 2}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawn
       value: 1
@@ -19297,6 +19314,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 452392092}
     m_Modifications:
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _data
+      value: 
+      objectReference: {fileID: 11400000, guid: af2c84abe97932d498fb7c044c00e452, type: 2}
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawn
       value: 1
       objectReference: {fileID: 0}
@@ -19421,6 +19442,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 452392092}
     m_Modifications:
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _data
+      value: 
+      objectReference: {fileID: 11400000, guid: af2c84abe97932d498fb7c044c00e452, type: 2}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawn
       value: 1
@@ -19772,6 +19797,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 452392092}
     m_Modifications:
+    - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
+      propertyPath: _data
+      value: 
+      objectReference: {fileID: 11400000, guid: af2c84abe97932d498fb7c044c00e452, type: 2}
     - target: {fileID: 1930062492461676835, guid: 3f6abac1f4f888b4fac7d5e5c074492f, type: 3}
       propertyPath: _spawn
       value: 1

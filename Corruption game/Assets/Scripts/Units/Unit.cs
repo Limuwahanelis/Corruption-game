@@ -27,7 +27,6 @@ public abstract class Unit : MonoBehaviour
     protected Allegiance _allegiance;
     protected IObjectPool<Unit> _pool;
     protected TargetDetector.Target _target = null;
-    protected bool _spawnCorrupted;
     private void Start()
     {
         _listOfActiveUnits.AddGameobject(gameObject);
@@ -38,13 +37,12 @@ public abstract class Unit : MonoBehaviour
         _pool.Release(this);
         ResetUnit();
     }
-    public virtual void SetUp(AudioSourcePool audioSourcePool)
+    public virtual void SetUp(AudioSourcePool audioSourcePool,bool isCorrupted)
     {
         _audioSourcePool = audioSourcePool;
         _healthSystem.SetMacHP(_unitData.MaxHP);
         _factionAllegiance.SetAllegiance(_unitData.OriginalAllegiance);
-        _corruptionComponent.SetMaxCorruption(_unitData.MaxCorruption);
-        _corruptionComponent.SetUp(_unitData.CorruptionreductionIntervalInSeconds, _unitData.CorruptionReductionValue);
+        _corruptionComponent.SetUp(_unitData.CorruptionreductionIntervalInSeconds, _unitData.CorruptionReductionValue, isCorrupted, _unitData.TechnologyValue, _unitData.MaxCorruption);
         _healthSystem.OnDeath += Death;
         _healthSystem.ResetHealth();
     }
@@ -52,7 +50,6 @@ public abstract class Unit : MonoBehaviour
     {
         _healthSystem.OnDeath -= Death;
         _spriteColor.gameObject.transform.localPosition = Vector2.zero;
-        _spawnCorrupted= false; 
     }
     public void SetPool(IObjectPool<Unit> pool) => _pool = pool;
     public virtual void SetOriginaltarget(Transform target,IDamagable damagable, CorruptionComponent corruption)
@@ -75,7 +72,6 @@ public abstract class Unit : MonoBehaviour
     }
     public void Corrupt()
     {
-        _spawnCorrupted = true;
         _corruptionComponent.ForceCorrupt();
     }
 

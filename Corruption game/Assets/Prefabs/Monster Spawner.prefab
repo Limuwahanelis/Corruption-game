@@ -508,13 +508,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6e9ed099791fd84d9711f5920e3432b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _data: {fileID: 0}
   _spawnOnStart: 1
   _spawn: 0
-  _corruptionRadius: 0
-  _spawnRate: 3
-  _firstTimeCorruptionTechnologyValue: 0
-  _poolsList: {fileID: 11400000, guid: 68e5e49c1e201a346aaeab32eaddcb2f, type: 2}
-  _spawners: {fileID: 11400000, guid: 01e984d2dc84d9441939255bfc7881db, type: 2}
   _spawnTran:
   - {fileID: 2821960883636450581}
   - {fileID: 5013193864429371128}

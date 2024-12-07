@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae3dd15e61e40dd48b8168b512e0c40a, type: 3}
+  m_Name: Normal monster spawner
+  m_EditorClassIdentifier: 
+  _corruptionRadius: 3
+  _firstTimeCorruptionTechnologyValue: 3
+  _maxCorruption: 100
+  _corruptionDecrease: 7
+  _corruptionReduceInterval: 1
+  _spawnRate: 5
+  _poolsList: {fileID: 11400000, guid: 68e5e49c1e201a346aaeab32eaddcb2f, type: 2}
+  _spawners: {fileID: 11400000, guid: 01e984d2dc84d9441939255bfc7881db, type: 2}

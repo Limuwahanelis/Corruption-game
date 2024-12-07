@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0e8c1132fd866742855251d81133fe6, type: 3}
-  m_Name: TestMonster
+  m_Name: Base monster
   m_EditorClassIdentifier: 
   _unitPrefab: {fileID: 699504403497554751, guid: 8b789ce22dc6d774bad33de14fb15bcc, type: 3}
   _startingAllegiance: {fileID: 11400000, guid: bf14736a69e48ec46991e89799af7a45, type: 2}
