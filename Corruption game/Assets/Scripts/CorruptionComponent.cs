@@ -50,7 +50,7 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
         if (_corruptionBar) _corruptionBar.SetHealth(_maxCorruption);
         OnCorrupted?.Invoke(this);
     }
-    public void SetUp(int corruptionReductionInterval,int corruptionReductionValue,bool isCorrupted,int technologyPointValue, int maxCorruptionValue)
+    public void SetUp(float corruptionReductionInterval,int corruptionReductionValue,bool isCorrupted,int technologyPointValue, int maxCorruptionValue)
     {
         _maxCorruption = maxCorruptionValue;
         _corrutptionReduceInterval = corruptionReductionInterval;
