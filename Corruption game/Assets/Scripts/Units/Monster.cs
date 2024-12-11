@@ -9,6 +9,7 @@ public class Monster : Unit
     [SerializeField] TargetDetector _detector;
     [SerializeField] float _rangeFromTarget;
     [SerializeField] ListOfSpawners _spawnersList;
+    [SerializeField] MonsterMovement _movement;
     
     private Coroutine _attackCor;
     private float _timer;
@@ -38,11 +39,7 @@ public class Monster : Unit
         if (_target == null || _target.tran==null)
         {
             if (_originalTarget == null || _originalTarget.tran==null) return;
-            if (Vector2.Distance(_mainBody.position, _originalTarget.tran.position) > _rangeFromTarget)
-            {
-                _mainBody.Translate((_originalTarget.tran.position - _mainBody.position).normalized * _unitData.Speed * Time.deltaTime);
-            }
-            else
+            if (_movement.DistanceFromOriginaltarget <= _rangeFromTarget)
             {
                 _timer += Time.deltaTime;
                 if (_timer > _unitData.AttackInterval)
@@ -67,19 +64,14 @@ public class Monster : Unit
         }
         else
         {
-            if (Vector2.Distance(_mainBody.position, _target.tran.position) > _rangeFromTarget)
-            {
-                _mainBody.Translate((_target.tran.position - _mainBody.position).normalized * _unitData.Speed * Time.deltaTime);
-            }
-            else
+            if (_movement.DistanceFromTarget<= _rangeFromTarget)
             {
                 _timer += Time.deltaTime;
                 if(_timer>_unitData.AttackInterval)
                 {
                     if (!isActiveAndEnabled) return;
                     _animManager.Animator.SetFloat("Angle", -Vector2.SignedAngle(Vector2.up, (_target.tran.position - _mainBody.position).normalized));
-                    if (_mainBody.position.x < _target.tran.position.x) _animManager.PlayAnimation("Attack");
-                    else _animManager.PlayAnimation("Attack");
+                    _animManager.PlayAnimation("Attack");
                     StartCoroutine( HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
                     {
                         _animManager.PlayAnimation("Empty");
@@ -104,6 +96,7 @@ public class Monster : Unit
             }
         }
         base.SetOriginaltarget(originalTargetTran, originaltargetDamagable, originaltargetCorruption);
+            _movement.SetUp(null, _originalTarget, _rangeFromTarget, _unitData.Speed);
         if (originaltargetCorruption != null) originaltargetCorruption.OnCorrupted.AddListener(GetNewOriginaltarget);
         if (originaltargetDamagable != null) originaltargetDamagable.OnDeath += GetNewOriginaltarget;
     }
@@ -173,6 +166,7 @@ public class Monster : Unit
             if (_target.tran != null) return;
         }
         _target = target;
+        _movement.UpdateTarget(target);
         if (_target == null) return;
         if (_target.corruptionComponent) _target.corruptionComponent.OnCorrupted.AddListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath += OnTargetDestroyed;
