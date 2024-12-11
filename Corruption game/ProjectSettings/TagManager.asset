@@ -44,3 +44,12 @@ TagManager:
   - name: UI
     uniqueID: 3351904999
     locked: 0
+  - name: Grid
+    uniqueID: 4241365985
+    locked: 0
+  - name: Buildings
+    uniqueID: 2245679169
+    locked: 0
+  - name: Units
+    uniqueID: 3235032145
+    locked: 0

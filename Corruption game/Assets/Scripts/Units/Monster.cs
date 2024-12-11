@@ -39,7 +39,7 @@ public class Monster : Unit
         if (_target == null || _target.tran==null)
         {
             if (_originalTarget == null || _originalTarget.tran==null) return;
-            if (_movement.DistanceFromOriginaltarget < _rangeFromTarget)
+            if (_movement.DistanceFromOriginaltarget <= _rangeFromTarget)
             {
                 _timer += Time.deltaTime;
                 if (_timer > _unitData.AttackInterval)
@@ -64,15 +64,14 @@ public class Monster : Unit
         }
         else
         {
-            if (_movement.DistanceFromTarget< _rangeFromTarget)
+            if (_movement.DistanceFromTarget<= _rangeFromTarget)
             {
                 _timer += Time.deltaTime;
                 if(_timer>_unitData.AttackInterval)
                 {
                     if (!isActiveAndEnabled) return;
                     _animManager.Animator.SetFloat("Angle", -Vector2.SignedAngle(Vector2.up, (_target.tran.position - _mainBody.position).normalized));
-                    if (_mainBody.position.x < _target.tran.position.x) _animManager.PlayAnimation("Attack");
-                    else _animManager.PlayAnimation("Attack");
+                    _animManager.PlayAnimation("Attack");
                     StartCoroutine( HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
                     {
                         _animManager.PlayAnimation("Empty");

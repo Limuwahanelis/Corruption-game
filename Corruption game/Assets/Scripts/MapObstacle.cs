@@ -20,7 +20,7 @@ public class MapObstacle:MonoBehaviour
         if (_listOfMapObstacles == null) Logger.Error("List of map obstacles was not assigned !", this);
         _listOfMapObstacles.AddGameobject(gameObject);
     }
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(_obstacle.position, _obstaclerange);
     }

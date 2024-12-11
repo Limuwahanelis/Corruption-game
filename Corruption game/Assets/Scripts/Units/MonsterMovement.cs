@@ -8,7 +8,7 @@ public class MonsterMovement : UnitMovement
     public float DistanceFromOriginaltarget { get { return Vector2.Distance(_mainBody.position, _originalTarget.tran.position); }  }
     public float DistanceFromTarget { get {
             if (_target.tran == null) return -1;
-            else return Vector2.Distance(_mainBody.position, _originalTarget.tran.position);
+            else return Vector2.Distance(_mainBody.position, _target.tran.position);
                 } }
 
     [SerializeField] Transform _mainBody;
@@ -21,6 +21,7 @@ public class MonsterMovement : UnitMovement
     private TargetDetector.Target _originalTarget;
     private float _rangeFromTarget;
     private float _speed;
+    private Vector2 _originaltargetDir;
     private void Awake()
     {
         Vector2 firstDir = Vector2.left;
@@ -63,17 +64,28 @@ public class MonsterMovement : UnitMovement
     // Update is called once per frame
     void Update()
     {
+       
         if (_target == null || _target.tran == null)
         {
             if (_originalTarget == null || _originalTarget.tran == null) return;
-            for(int i=0;i<_mapObstacles.Count;i++)
+            _originaltargetDir = (_originalTarget.tran.position-_mainBody.position).normalized;
+            Vector2 diff = Vector2.zero;
+            for (int i=0;i<_mapObstacles.Count;i++)
             {
                 if (Vector2.Distance(_mapObstacles[i].ObstacleTran.position, _mainBody.position) < _mapObstacles[i].Radius)
                 {
-                    _moveDirection = Vector2.Perpendicular(_mapObstacles[i].ObstacleTran.position-_mainBody.position).normalized;
+                    // Vector2 dir = (_mainBody.position - _target.tran.position).normalized;
+                    Vector2 dirTowardsObstacle = (_mapObstacles[i].ObstacleTran.position - _mainBody.position).normalized;
+                    Vector2 counterClockPerpen = Vector2.Perpendicular(dirTowardsObstacle).normalized;
+                    Vector2 clockPerpen = -Vector2.Perpendicular(dirTowardsObstacle).normalized;
+                    if(Vector2.Dot(_originaltargetDir,counterClockPerpen)>= Vector2.Dot(_originaltargetDir, clockPerpen)) diff = counterClockPerpen - _originaltargetDir;
+                    else diff = clockPerpen - _originaltargetDir;
+
+                    //_moveDirection = Vector2.Perpendicular(_mapObstacles[i].ObstacleTran.position-_mainBody.position).normalized;
                 }
-                else _moveDirection = (_originalTarget.tran.position - _mainBody.position).normalized;
+               // else _moveDirection = (_originalTarget.tran.position - _mainBody.position).normalized;
             }
+            _moveDirection = _originaltargetDir+diff;
             if (Vector2.Distance(_mainBody.position, _originalTarget.tran.position) > _rangeFromTarget)
             {
                 _mainBody.Translate(_moveDirection * _speed * Time.deltaTime);
