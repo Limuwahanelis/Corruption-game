@@ -32,5 +32,9 @@ public class AudioSourcePool : MonoBehaviour
     {
         source.gameObject.SetActive(false);
     }
+    public void ReturnSource(GameObject source)
+    {
+        _audioSourcePool.Release(source);
+    }
 
 }

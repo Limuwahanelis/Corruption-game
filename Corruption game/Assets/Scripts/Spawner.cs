@@ -29,6 +29,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [SerializeField] AudioSourcePool _sourcePool;
     [SerializeField] LineRenderer _lineRenderer;
     [SerializeField] CorruptTiles _corruptTiles;
+    [SerializeField] CorutineHolder _corutineHolder;
     [Header("Mouse interactions")]
     [SerializeField] GameObject _hoverBorder;
     [SerializeField] GameObject _destroyedHoverBorder;
@@ -38,6 +39,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     private float _time = 0;
     private float _index = 0;
     private bool _isPointedAt=false;
+    
     private void Awake()
     {
         
@@ -59,6 +61,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         _sourcePool= FindObjectOfType<AudioSourcePool>();
         _lineRenderer = FindObjectOfType<LineRenderer>();
         _corruptTiles = FindObjectOfType<CorruptTiles>();
+        _corutineHolder = FindObjectOfType<CorutineHolder>();
     }
     public void Spawn()
     {
@@ -71,7 +74,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             {
                 Unit unit = _data.PoolsList.Pools[_poolIndex].GetUnit();
                 unit.gameObject.name = $"{_index} {_corruptionComponent.IsCorrupted}";
-                unit.SetUp(_sourcePool,_corruptionComponent.IsCorrupted);
+                unit.SetUp(_sourcePool,_corruptionComponent.IsCorrupted,_corutineHolder);
                 unit.transform.position = _spawnTran[_spawnIndex].position;
                 unit.SetOriginaltarget(_unitsOriginaltarget, _unitsOriginaltarget.GetComponent<IDamagable>(), _unitsOriginaltarget.GetComponent<CorruptionComponent>());
                 _spawnIndex++;

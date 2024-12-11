@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 public class TargetDetector : MonoBehaviour
 {
@@ -25,10 +27,15 @@ public class TargetDetector : MonoBehaviour
             if (corruptionComponent != null) corruptionComponent.IncreseCorruption(corruptionForce);
         }
     }
-    List<Target> targets= new List<Target>();
-    List<Target> _allPossibletargets = new List<Target>();
+
     public UnityEvent<Target> OnTargetDetected;
     public UnityEvent OnTargetLeft;
+    public static Target EmptyTarget => _emptyTarget;
+    static Target _emptyTarget = new Target();
+    List<Target> targets= new List<Target>();
+    List<Target> _allPossibletargets = new List<Target>();
+
+    // TODO: fix target acquistion on spawn and clear targets in TargetTedector.
     private void OnTriggerEnter2D(Collider2D collision)
     {
         IDamagable tmp = collision.attachedRigidbody.GetComponent<IDamagable>();
@@ -70,7 +77,7 @@ public class TargetDetector : MonoBehaviour
     }
     public Target GetClosestTarget(Transform tran)
     {
-        if (targets.Count == 0) return null;
+        if (targets.Count == 0) return _emptyTarget;
         Target closestTarget = targets[0];
         float lowestDistance=Vector2.Distance(tran.position,closestTarget.tran.position);
         float dist = 0;
@@ -104,6 +111,10 @@ public class TargetDetector : MonoBehaviour
             targets.Remove(tmp);
             tmp.damagable.OnDeath -= RemoveTarget;
         }
+    }
+    public void ClearAlltargets()
+    {
+        targets.Clear();
     }
     private void OnDestroy()
     {

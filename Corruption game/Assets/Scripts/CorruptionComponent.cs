@@ -57,6 +57,7 @@ public class CorruptionComponent : MonoBehaviour,IMouseCorruptable
         _corruptionDecrease = corruptionReductionValue;
         _isCorrupted = isCorrupted;
         _technologyPointValue = technologyPointValue;
+        _corruptionProgress = 0;
         if (_corruptionBar) _corruptionBar.Initialize();
         if (_corruptionBar) _corruptionBar.SetMaxHealth(_maxCorruption);
         if (_corruptionBar) _corruptionBar.SetHealth(0);

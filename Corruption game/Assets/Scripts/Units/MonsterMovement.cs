@@ -7,7 +7,7 @@ public class MonsterMovement : UnitMovement
 {
     public float DistanceFromOriginaltarget { get { return Vector2.Distance(_mainBody.position, _originalTarget.tran.position); }  }
     public float DistanceFromTarget { get {
-            if (_target == null || _target.tran == null) return -1;
+            if (_target == TargetDetector.EmptyTarget || _target.tran == null) return -1;
             else return Vector2.Distance(_mainBody.position, _target.tran.position);
                 } }
 
@@ -22,6 +22,7 @@ public class MonsterMovement : UnitMovement
     private float _rangeFromTarget;
     private float _speed;
     private Vector2 _originaltargetDir;
+    private Vector2 _targetDir;
     private void Awake()
     {
         Vector2 firstDir = Vector2.left;
@@ -65,7 +66,7 @@ public class MonsterMovement : UnitMovement
     void Update()
     {
        
-        if (_target == null || _target.tran == null)
+        if (_target == TargetDetector.EmptyTarget)
         {
             if (_originalTarget == null || _originalTarget.tran == null) return;
             _originaltargetDir = (_originalTarget.tran.position-_mainBody.position).normalized;
@@ -79,13 +80,14 @@ public class MonsterMovement : UnitMovement
                     Vector2 counterClockPerpen = Vector2.Perpendicular(dirTowardsObstacle).normalized;
                     Vector2 clockPerpen = -Vector2.Perpendicular(dirTowardsObstacle).normalized;
                     if(Vector2.Dot(_originaltargetDir,counterClockPerpen)>= Vector2.Dot(_originaltargetDir, clockPerpen)) diff = counterClockPerpen - _originaltargetDir;
-                    else diff = clockPerpen - _originaltargetDir;
+                    else diff += clockPerpen - _originaltargetDir;
+                    if (Vector2.Dot(_originaltargetDir, dirTowardsObstacle) < -0.97f) diff -= clockPerpen - _originaltargetDir;
 
                     //_moveDirection = Vector2.Perpendicular(_mapObstacles[i].ObstacleTran.position-_mainBody.position).normalized;
                 }
                // else _moveDirection = (_originalTarget.tran.position - _mainBody.position).normalized;
             }
-            _moveDirection = _originaltargetDir+diff;
+            _moveDirection = (_originaltargetDir + diff).normalized;
             if (Vector2.Distance(_mainBody.position, _originalTarget.tran.position) > _rangeFromTarget)
             {
                 _mainBody.Translate(_moveDirection * _speed * Time.deltaTime);
@@ -93,9 +95,27 @@ public class MonsterMovement : UnitMovement
         }
         else
         {
+            _targetDir = (_target.tran.position - _mainBody.position).normalized;
+            Vector2 diff = Vector2.zero;
+            for (int i = 0; i < _mapObstacles.Count; i++)
+            {
+                if (Vector2.Distance(_mapObstacles[i].ObstacleTran.position, _mainBody.position) < _mapObstacles[i].Radius)
+                {
+                    // Vector2 dir = (_mainBody.position - _target.tran.position).normalized;
+                    Vector2 dirTowardsObstacle = (_mapObstacles[i].ObstacleTran.position - _mainBody.position).normalized;
+                    Vector2 counterClockPerpen = Vector2.Perpendicular(dirTowardsObstacle).normalized;
+                    Vector2 clockPerpen = -Vector2.Perpendicular(dirTowardsObstacle).normalized;
+                    if (Vector2.Dot(_targetDir, counterClockPerpen) >= Vector2.Dot(_targetDir, clockPerpen)) diff = counterClockPerpen - _targetDir;
+                    else diff +=clockPerpen - _targetDir;
+                    if (Vector2.Dot(_targetDir, dirTowardsObstacle) < -0.97f) diff -= clockPerpen - _targetDir; // check this 
+                    //_moveDirection = Vector2.Perpendicular(_mapObstacles[i].ObstacleTran.position-_mainBody.position).normalized;
+                }
+                // else _moveDirection = (_originalTarget.tran.position - _mainBody.position).normalized;
+            }
+            _moveDirection = (_targetDir + diff).normalized;
             if (Vector2.Distance(_mainBody.position, _target.tran.position) > _rangeFromTarget)
             {
-                _mainBody.Translate((_target.tran.position - _mainBody.position).normalized * _speed * Time.deltaTime);
+                _mainBody.Translate(_moveDirection * _speed * Time.deltaTime);
             }
         }
     }

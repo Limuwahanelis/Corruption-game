@@ -24,6 +24,8 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] protected SpriteColor _spriteColor;
     [SerializeField] protected ListOfGameobjects _listOfActiveUnits;
     [SerializeField] protected Transform _mainBody;
+
+    protected CorutineHolder _corutineHolder;
     protected Allegiance _allegiance;
     protected IObjectPool<Unit> _pool;
     protected TargetDetector.Target _target = null;
@@ -37,8 +39,9 @@ public abstract class Unit : MonoBehaviour
         _pool.Release(this);
         ResetUnit();
     }
-    public virtual void SetUp(AudioSourcePool audioSourcePool,bool isCorrupted)
+    public virtual void SetUp(AudioSourcePool audioSourcePool,bool isCorrupted, CorutineHolder corutineHolder)
     {
+        _corutineHolder = corutineHolder;
         _audioSourcePool = audioSourcePool;
         _healthSystem.SetMacHP(_unitData.MaxHP);
         _factionAllegiance.SetAllegiance(_unitData.OriginalAllegiance);
@@ -48,8 +51,11 @@ public abstract class Unit : MonoBehaviour
     }
     public virtual void ResetUnit()
     {
+        _spriteColor.RestoreColor();
         _healthSystem.OnDeath -= Death;
-        _spriteColor.gameObject.transform.localPosition = Vector2.zero;
+        _spriteColor.gameObject.transform.localPosition = Vector3.zero;
+        _mainBody.transform.localPosition = Vector3.zero;
+        //_spriteColor.gameObject.transform.localPosition = Vector2.zero;
     }
     public void SetPool(IObjectPool<Unit> pool) => _pool = pool;
     public virtual void SetOriginaltarget(Transform target,IDamagable damagable, CorruptionComponent corruption)

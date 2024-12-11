@@ -40,13 +40,26 @@ public class AnimationManager : MonoBehaviour
     }
 #endif
 
+    public void ForceEmptyState()
+    {
+        var animData = animList.animations.Find(x => x.name == "Empty" && x.layer == 0);
+        if (animData == null)
+        {
+            Logger.Warning($"There is no state with name Empty");
+            return;
+        }
+        _animLength = 0;
+        _anim.Play(Animator.StringToHash("Empty")); //clipToPlay.nameHash);
+        _currentAnimation = name;
+
+    }
 
     public void PlayAnimation(string name, bool canBePlayedOver = true)
     {
         var animData = animList.animations.Find(x => x.name == name && x.layer == 0);
         if (animData == null)
         {
-            Logger.Warning($"Ther is no state with name {name}");
+            Logger.Warning($"There is no state with name {name}");
             return;
         }
         if (_currentAnimation == name) return;
