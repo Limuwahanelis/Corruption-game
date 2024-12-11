@@ -7,7 +7,7 @@ public class MonsterMovement : UnitMovement
 {
     public float DistanceFromOriginaltarget { get { return Vector2.Distance(_mainBody.position, _originalTarget.tran.position); }  }
     public float DistanceFromTarget { get {
-            if (_target.tran == null) return -1;
+            if (_target == null || _target.tran == null) return -1;
             else return Vector2.Distance(_mainBody.position, _target.tran.position);
                 } }
 

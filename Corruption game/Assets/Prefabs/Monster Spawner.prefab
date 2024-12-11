@@ -70,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2049288127
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ef1198f5eca7b6d4eb0daf5a96e0e2da, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -278,8 +278,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2049288127
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2ad6e283295ac5b42bc8f997a3e7397e, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -398,8 +398,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2049288127
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2ad6e283295ac5b42bc8f997a3e7397e, type: 3}
   m_Color: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
@@ -802,8 +802,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2049288127
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2ad6e283295ac5b42bc8f997a3e7397e, type: 3}
   m_Color: {r: 0.5466714, g: 1, b: 0, a: 1}
@@ -879,6 +879,14 @@ PrefabInstance:
     - target: {fileID: 1675815679218807370, guid: 85fb8ebb4e8c91f4d90f630e8a145d91, type: 3}
       propertyPath: m_Name
       value: Health bar (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5923305226767378710, guid: 85fb8ebb4e8c91f4d90f630e8a145d91, type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5923305226767378710, guid: 85fb8ebb4e8c91f4d90f630e8a145d91, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -943062297
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -967,7 +975,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5923305226767378710, guid: 85fb8ebb4e8c91f4d90f630e8a145d91, type: 3}
       propertyPath: m_SortingLayer
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5923305226767378710, guid: 85fb8ebb4e8c91f4d90f630e8a145d91, type: 3}
       propertyPath: m_SortingOrder
