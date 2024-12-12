@@ -22,6 +22,7 @@ public class Monster : Unit
         _sefDMG.dmg = _unitData.CorruptionHPDecayValue;
         _sefDMG.dmgPosition=_mainBody.position;
         _detector.OnTargetDetected.AddListener(SetTarget);
+        _detector.OnTargetLeft.AddListener(OnTargetLeftRange);
         _detector.ClearAlltargets();
         _target = TargetDetector.EmptyTarget;
     }
@@ -175,6 +176,12 @@ public class Monster : Unit
         if (_target.damagable != null) _target.damagable.OnDeath += OnTargetDestroyed;
     }
     #endregion
+    private void OnTargetLeftRange(TargetDetector.Target target)
+    {
+        if (target != _target) return;
+        _detector.UpdateTargetList();
+        SetTarget(_detector.GetClosestTarget(_mainBody));
+    }
     private void OnTargetCorrupted(CorruptionComponent corruptionComponent)
     {
         
@@ -257,6 +264,7 @@ public class Monster : Unit
     {
        base.ResetUnit();
         _detector.OnTargetDetected.RemoveListener(SetTarget);
+        _detector.OnTargetLeft.RemoveListener(OnTargetLeftRange);
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
         _mainBody.transform.localPosition = Vector3.zero;
       

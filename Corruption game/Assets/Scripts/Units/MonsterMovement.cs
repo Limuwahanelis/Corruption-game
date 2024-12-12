@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class MonsterMovement : UnitMovement
 {
+
     public float DistanceFromOriginaltarget { get { return Vector2.Distance(_mainBody.position, _originalTarget.tran.position); }  }
     public float DistanceFromTarget { get {
             if (_target == TargetDetector.EmptyTarget || _target.tran == null) return -1;
             else return Vector2.Distance(_mainBody.position, _target.tran.position);
                 } }
-
+# if UNITY_EDITOR
+    [Header("DEBUG")]
+    [SerializeField] bool _stayInPlace;
+#endif
     [SerializeField] Transform _mainBody;
     [SerializeField] ListOfGameobjects _obstacles;
     List<MapObstacle> _mapObstacles;

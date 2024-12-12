@@ -6,7 +6,6 @@ using UnityEngine.Pool;
 public abstract class Unit : MonoBehaviour
 {
     public HealthSystem HealthSystem=>_healthSystem;
-    public Allegiance Allegiance => _allegiance;
     public Transform MainBody => _mainBody;
 
     [SerializeField] Transform _testOriginalTarget;
@@ -26,7 +25,6 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] protected Transform _mainBody;
 
     protected CorutineHolder _corutineHolder;
-    protected Allegiance _allegiance;
     protected IObjectPool<Unit> _pool;
     protected TargetDetector.Target _target = null;
     private void Start()

@@ -336,7 +336,7 @@ GameObject:
   - component: {fileID: 6823750531648603986}
   - component: {fileID: 2762296266781645361}
   m_Layer: 6
-  m_Name: GameObject
+  m_Name: Target detector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
