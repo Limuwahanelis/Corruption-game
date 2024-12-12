@@ -8,7 +8,7 @@ public class MonsterMovement : UnitMovement
 
     public float DistanceFromOriginaltarget { get { return Vector2.Distance(_mainBody.position, _originalTarget.tran.position); }  }
     public float DistanceFromTarget { get {
-            if (_target == TargetDetector.EmptyTarget || _target.tran == null) return -1;
+            if (_target == TargetDetector.EmptyTarget || _target == null|| _target.tran == null) return -1;
             else return Vector2.Distance(_mainBody.position, _target.tran.position);
                 } }
 # if UNITY_EDITOR
@@ -69,7 +69,9 @@ public class MonsterMovement : UnitMovement
     // Update is called once per frame
     void Update()
     {
-       
+#if UNITY_EDITOR
+        if (_stayInPlace) return;
+#endif
         if (_target == TargetDetector.EmptyTarget)
         {
             if (_originalTarget == null || _originalTarget.tran == null) return;

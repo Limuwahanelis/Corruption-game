@@ -7,12 +7,12 @@ public class TestMissionManager : MissionManager
     [SerializeField] ListOfSpawners _listOfSpawners;
     int _corruptedSpawners = 0;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         for(int i=0; i< _listOfSpawners.Spawners.Count; i++) 
         {
             CorruptionComponent corruptionCom = _listOfSpawners.Spawners[i].GetComponent<CorruptionComponent>();
-            if(corruptionCom.IsCorrupted) _corruptedSpawners++;
+            //if(corruptionCom.IsCorrupted) _corruptedSpawners++;
             corruptionCom.OnCorrupted.AddListener(OnSpawnerCorrupted);
             corruptionCom.OnUnCorrupted.AddListener(OnSpawnerUnCorrupted);
         }
@@ -26,5 +26,15 @@ public class TestMissionManager : MissionManager
     {
         _corruptedSpawners--;
         if(_corruptedSpawners <= 0) failMission();
+    }
+    private void OnDestroy()
+    {
+        for (int i = 0; i < _listOfSpawners.Spawners.Count; i++)
+        {
+            CorruptionComponent corruptionCom = _listOfSpawners.Spawners[i].GetComponent<CorruptionComponent>();
+            //if(corruptionCom.IsCorrupted) _corruptedSpawners++;
+            corruptionCom.OnCorrupted.RemoveListener(OnSpawnerCorrupted);
+            corruptionCom.OnUnCorrupted.RemoveListener(OnSpawnerUnCorrupted);
+        }
     }
 }

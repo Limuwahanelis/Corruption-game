@@ -34,7 +34,7 @@ public abstract class Unit : MonoBehaviour
     public virtual void Death(IDamagable damagable)
     {
         _listOfActiveUnits.RemoveGameobject(gameObject);
-        _pool.Release(this);
+        if(_pool!=null) _pool.Release(this);
         ResetUnit();
     }
     public virtual void SetUp(AudioSourcePool audioSourcePool,bool isCorrupted, CorutineHolder corutineHolder)
@@ -51,7 +51,7 @@ public abstract class Unit : MonoBehaviour
     {
         _spriteColor.RestoreColor();
         _healthSystem.OnDeath -= Death;
-        _spriteColor.gameObject.transform.localPosition = Vector3.zero;
+        _spriteColor.transform.parent.localPosition = Vector3.zero;
         _mainBody.transform.localPosition = Vector3.zero;
         //_spriteColor.gameObject.transform.localPosition = Vector2.zero;
     }
