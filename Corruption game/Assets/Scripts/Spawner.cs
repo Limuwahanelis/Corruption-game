@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.EventSystems;
 [SelectionBase]
@@ -29,24 +30,31 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     [SerializeField] AudioSourcePool _sourcePool;
     [SerializeField] LineRenderer _lineRenderer;
     [SerializeField] CorruptTiles _corruptTiles;
+    [SerializeField] CorutineHolder _corutineHolder;
     [Header("Mouse interactions")]
     [SerializeField] GameObject _hoverBorder;
     [SerializeField] GameObject _destroyedHoverBorder;
     [SerializeField] GameObject _selectedBorder;
+#if UNITY_EDITOR
+    [Header("Debug")]
+#endif
+
     private Transform _unitsOriginaltarget;
     private bool _isSelected = false;
     private float _time = 0;
     private float _index = 0;
     private bool _isPointedAt=false;
+    
     private void Awake()
     {
         
         _data.Spawners.AddSpawnerToList(this);
-        _corruptionComponent.SetUp(_data.CorrutptionReduceInterval,_data.CorruptionDecrease,_corruptionComponent.IsCorrupted,_data.FirstTimeCorruptionTechnologyValue,_data.MaxCorruption);
+        
         _healthSystem.OnDeath += DestroySpawner;
     }
     private void Start()
     {
+        _corruptionComponent.SetUp(_data.CorrutptionReduceInterval, _data.CorruptionDecrease, _corruptionComponent.IsCorrupted, _data.FirstTimeCorruptionTechnologyValue, _data.MaxCorruption);
         //if (_corruptionComponent.IsCorrupted) _corruptTiles.CorruptTileRadius(transform.position, _corruptionRadius);
         ChangeOriginaltarget();
         if (_spawnOnStart)
@@ -59,6 +67,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         _sourcePool= FindObjectOfType<AudioSourcePool>();
         _lineRenderer = FindObjectOfType<LineRenderer>();
         _corruptTiles = FindObjectOfType<CorruptTiles>();
+        _corutineHolder = FindObjectOfType<CorutineHolder>();
     }
     public void Spawn()
     {
@@ -71,7 +80,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             {
                 Unit unit = _data.PoolsList.Pools[_poolIndex].GetUnit();
                 unit.gameObject.name = $"{_index} {_corruptionComponent.IsCorrupted}";
-                unit.SetUp(_sourcePool,_corruptionComponent.IsCorrupted);
+                unit.SetUp(_sourcePool,_corruptionComponent.IsCorrupted,_corutineHolder);
                 unit.transform.position = _spawnTran[_spawnIndex].position;
                 unit.SetOriginaltarget(_unitsOriginaltarget, _unitsOriginaltarget.GetComponent<IDamagable>(), _unitsOriginaltarget.GetComponent<CorruptionComponent>());
                 _spawnIndex++;
@@ -84,7 +93,30 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
 
         }
     }
+    private void SpawnCorrupted()
+    {
+        int _spawnIndex = 0;
 
+        for (int i = 0; i < (_unitsToSpawn.Count); i++)
+        {
+            int _poolIndex = _data.PoolsList.Pools.FindIndex(x => x.SpawnUnitData == _unitsToSpawn[i]);
+            for (int j = 0; j < (_corruptedUnitsSpawnNumber[i]); j++)
+            {
+                Unit unit = _data.PoolsList.Pools[_poolIndex].GetUnit();
+                unit.gameObject.name = $"{_index} true";
+                unit.SetUp(_sourcePool, true, _corutineHolder);
+                unit.transform.position = _spawnTran[_spawnIndex].position;
+                unit.SetOriginaltarget(_unitsOriginaltarget, _unitsOriginaltarget.GetComponent<IDamagable>(), _unitsOriginaltarget.GetComponent<CorruptionComponent>());
+                _spawnIndex++;
+                if (_spawnIndex >= _spawnTran.Count)
+                {
+                    _spawnIndex = 0;
+                }
+                _index++;
+            }
+
+        }
+    }
     private void Update()
     {
         if(PauseSettings.IsGamePaused) return;
@@ -96,39 +128,7 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
             _time= 0;
         }
     }
-    public void Interact()
-    {
-        if (!_healthSystem.IsAlive) return;
-        _isSelected = true;
-        _selectedBorder.SetActive(true);
-        _hoverBorder.SetActive(false);
-        _lineRenderer.SetPosition(0, _linePoint.position);
-        _lineRenderer.SetPosition(1, _unitsOriginaltarget.GetComponent<Spawner>().LinePoint.position);
 
-    }
-
-    public void Deselect()
-    {
-        _isSelected= false;
-        _selectedBorder.SetActive(false);
-        _lineRenderer.SetPosition(0, Vector3.zero);
-        _lineRenderer.SetPosition(1, Vector3.zero);
-    }
-
-    // this function is called on currently selected spawner
-    public void RBMPress(Transform tran,bool isCorrupted)
-    {
-        if (isCorrupted) return;
-        if (!_corruptionComponent.IsCorrupted) return;
-        if (_isSelected)
-        {
-            _unitsOriginaltarget = tran;
-            _unitsOriginaltarget.GetComponent<CorruptionComponent>().OnCorrupted.AddListener(OnOriginalTargetCorrupted);
-            _lineRenderer.SetPosition(0, _linePoint.position);
-            _lineRenderer.SetPosition(1, _unitsOriginaltarget.GetComponent<Spawner>().LinePoint.position);
-        }
-
-    }
     private void OnOriginaltargetDestroyed(IDamagable damagable)
     {
         damagable.OnDeath -= OnOriginaltargetDestroyed;
@@ -195,7 +195,40 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
     {
         _corruptTiles.UncorruptTiles(transform.position, _data.CorruptionRadius);
     }
+    #region Interaction
+    public void Interact()
+    {
+        if (!_healthSystem.IsAlive) return;
+        _isSelected = true;
+        _selectedBorder.SetActive(true);
+        _hoverBorder.SetActive(false);
+        _lineRenderer.SetPosition(0, _linePoint.position);
+        _lineRenderer.SetPosition(1, _unitsOriginaltarget.GetComponent<Spawner>().LinePoint.position);
 
+    }
+
+    public void Deselect()
+    {
+        _isSelected = false;
+        _selectedBorder.SetActive(false);
+        _lineRenderer.SetPosition(0, Vector3.zero);
+        _lineRenderer.SetPosition(1, Vector3.zero);
+    }
+
+    // this function is called on currently selected spawner
+    public void RBMPress(Transform tran, bool isCorrupted)
+    {
+        if (isCorrupted) return;
+        if (!_corruptionComponent.IsCorrupted) return;
+        if (_isSelected)
+        {
+            _unitsOriginaltarget = tran;
+            _unitsOriginaltarget.GetComponent<CorruptionComponent>().OnCorrupted.AddListener(OnOriginalTargetCorrupted);
+            _lineRenderer.SetPosition(0, _linePoint.position);
+            _lineRenderer.SetPosition(1, _unitsOriginaltarget.GetComponent<Spawner>().LinePoint.position);
+        }
+
+    }
     public void OnPointerExit(PointerEventData eventData)
     {
         if (_isSelected) return;
@@ -212,8 +245,33 @@ public class Spawner : MonoBehaviour,IMouseInteractable,IPointerEnterHandler,IPo
         _isPointedAt = true;
 
     }
+    #endregion
     private void OnDestroy()
     {
         _data.Spawners.RemoveSpawner(this);
     }
+#if UNITY_EDITOR
+    [CustomEditor(typeof(Spawner))]
+    public class SpawnerEditor : Editor
+    {
+        private void OnEnable()
+        {
+
+        }
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            Spawner spawner = target as Spawner;
+            if (GUILayout.Button("Spawn"))
+            {
+                if (Application.isPlaying) spawner.Spawn();
+            }
+            if (GUILayout.Button("Spawn Corrupted"))
+            {
+               if(Application.isPlaying) spawner.SpawnCorrupted();
+            }
+        }
+    }
+#endif
 }
+

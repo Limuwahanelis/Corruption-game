@@ -5,7 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - _poolsList: {fileID: 11400000, guid: 68e5e49c1e201a346aaeab32eaddcb2f, type: 2}
-  executionOrder: -2
+  executionOrder: -10
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

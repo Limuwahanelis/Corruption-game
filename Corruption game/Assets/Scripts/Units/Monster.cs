@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Monster : Unit
 {
@@ -10,18 +13,23 @@ public class Monster : Unit
     [SerializeField] float _rangeFromTarget;
     [SerializeField] ListOfSpawners _spawnersList;
     [SerializeField] MonsterMovement _movement;
-    
+    [Header("DEBUG")]
+    [SerializeField] bool _debug;
     private Coroutine _attackCor;
     private float _timer;
     private float _hpDeacyTimer = 0;
     private DamageInfo _sefDMG=new DamageInfo();
-    public override void SetUp(AudioSourcePool audioSourcePool, bool isCorrupted)
+    public override void SetUp(AudioSourcePool audioSourcePool, bool isCorrupted, CorutineHolder corutineHolder)
     {
         _corruptionComponent.OnCorrupted.AddListener(OnCorrupted);
-        base.SetUp(audioSourcePool,isCorrupted);
+        base.SetUp(audioSourcePool,isCorrupted, corutineHolder);
         _sefDMG.dmg = _unitData.CorruptionHPDecayValue;
         _sefDMG.dmgPosition=_mainBody.position;
         _detector.OnTargetDetected.AddListener(SetTarget);
+        _detector.OnTargetLeft.AddListener(OnTargetLeftRange);
+        _detector.ClearAlltargets();
+        _originalTarget = TargetDetector.EmptyTarget;
+        _target = TargetDetector.EmptyTarget;
     }
     private void Update()
     {
@@ -36,26 +44,26 @@ public class Monster : Unit
                 _healthSystem.TakeDamage(_sefDMG);
             }
         }
-        if (_target == null || _target.tran==null)
+        if (_target == TargetDetector.EmptyTarget)
         {
-            if (_originalTarget == null || _originalTarget.tran==null) return;
-            if (_movement.DistanceFromOriginaltarget <= _rangeFromTarget)
+            if (_originalTarget == TargetDetector.EmptyTarget) return;
+            if (_movement.DistanceFromOriginaltarget > 0 && _movement.DistanceFromOriginaltarget <= _rangeFromTarget)
             {
                 _timer += Time.deltaTime;
                 if (_timer > _unitData.AttackInterval)
                 {
+                    if (!isActiveAndEnabled) return;
                     _animManager.Animator.SetFloat("Angle", -Vector2.SignedAngle(Vector2.up, (_originalTarget.tran.position - _mainBody.position).normalized));
                     if (_mainBody.position.x < _originalTarget.tran.position.x) _animManager.PlayAnimation("Attack");
                     else _animManager.PlayAnimation("Attack");
                     Action<TargetDetector.Target> DealDMG = x => 
                     {
                         _animManager.PlayAnimation("Empty");
-                        if (x == null) return;
+                        if (x == TargetDetector.EmptyTarget) return;
                         if (x != _originalTarget) return;
                         x.DealDamage(_corruptionComponent.IsCorrupted ? 0 : _unitData.Damage, _corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0, _mainBody.position);
 
                     };
-                    if (!isActiveAndEnabled) return;
                     _attackCor=StartCoroutine(HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () => DealDMG(_originalTarget)));
 
                     _timer = 0;
@@ -64,7 +72,7 @@ public class Monster : Unit
         }
         else
         {
-            if (_movement.DistanceFromTarget<= _rangeFromTarget)
+            if (_movement.DistanceFromTarget>0 &&_movement.DistanceFromTarget<= _rangeFromTarget)
             {
                 _timer += Time.deltaTime;
                 if(_timer>_unitData.AttackInterval)
@@ -75,7 +83,7 @@ public class Monster : Unit
                     StartCoroutine( HelperClass.DelayedFunction(_animManager.GetAnimationLength("Left attack"), () =>
                     {
                         _animManager.PlayAnimation("Empty");
-                        if (_target == null)  return;
+                        if (_target == TargetDetector.EmptyTarget)  return;
                         _target.DealDamage(_unitData.Damage, (_corruptionComponent.IsCorrupted ? _unitData.CorruptionForce : 0), _mainBody.position);
                         
                     }));
@@ -87,19 +95,17 @@ public class Monster : Unit
     }
     public override void SetOriginaltarget(Transform originalTargetTran, IDamagable originaltargetDamagable, CorruptionComponent originaltargetCorruption)
     {
-        if(_originalTarget!=null)
+        if (_originalTarget != TargetDetector.EmptyTarget)
         {
-            if(_originalTarget.tran!=null)
-            {
-                if (_originalTarget.damagable != null) _originalTarget.damagable.OnDeath -= GetNewOriginaltarget;
-                if (_originalTarget.corruptionComponent != null) _originalTarget.corruptionComponent.OnCorrupted.RemoveListener(GetNewOriginaltarget);
-            }
+            if (_originalTarget.damagable != null) _originalTarget.damagable.OnDeath -= GetNewOriginaltarget;
+            if (_originalTarget.corruptionComponent != null) _originalTarget.corruptionComponent.OnCorrupted.RemoveListener(GetNewOriginaltarget);
         }
         base.SetOriginaltarget(originalTargetTran, originaltargetDamagable, originaltargetCorruption);
-            _movement.SetUp(null, _originalTarget, _rangeFromTarget, _unitData.Speed);
+            _movement.SetUp(_target, _originalTarget, _rangeFromTarget, _unitData.Speed);
         if (originaltargetCorruption != null) originaltargetCorruption.OnCorrupted.AddListener(GetNewOriginaltarget);
         if (originaltargetDamagable != null) originaltargetDamagable.OnDeath += GetNewOriginaltarget;
     }
+    #region Targets acquisition
     private void GetNewOriginaltarget(CorruptionComponent corruption)
     {
         corruption.OnCorrupted.RemoveListener(GetNewOriginaltarget);
@@ -150,57 +156,56 @@ public class Monster : Unit
                 }
             }
             SetOriginaltarget(closestSpawner.transform, closestSpawner.GetComponent<IDamagable>(), closestSpawner.GetComponent<CorruptionComponent>());
-            //_originalTarget = new TargetDetector.Target()
-            //{
-            //    tran = closestSpawner.transform,
-            //    corruptionComponent = closestSpawner.GetComponent<CorruptionComponent>(),
-            //    damagable = closestSpawner.GetComponent<IDamagable>(),
-            //};
         }
         else enabled = false;
     }
     public void SetTarget(TargetDetector.Target target)
     {
-        if (_target != null)
-        {
-            if (_target.tran != null) return;
-        }
         _target = target;
         _movement.UpdateTarget(target);
-        if (_target == null) return;
+        if (_target == TargetDetector.EmptyTarget) return;
         if (_target.corruptionComponent) _target.corruptionComponent.OnCorrupted.AddListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath += OnTargetDestroyed;
+    }
+    #endregion
+    #region target state changed
+    private void OnTargetLeftRange(TargetDetector.Target target)
+    {
+        if (target != _target) return;
+        _detector.UpdateTargetList();
+        SetTarget(_detector.GetClosestTarget(_mainBody));
     }
     private void OnTargetCorrupted(CorruptionComponent corruptionComponent)
     {
         
         corruptionComponent.GetComponent<Unit>().SetOriginaltarget(_originalTarget.tran,_originalTarget.damagable,_originalTarget.corruptionComponent);
-        if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
+        corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
-        _target = null;
+        _target = TargetDetector.EmptyTarget;
         _detector.UpdateTargetList();
         SetTarget(_detector.GetClosestTarget(_mainBody));
     }
     private void OnTargetDestroyed(IDamagable damagable)
     {
         // when there is no tavailable targets _target becomes null
-        if(_target==null)
+        if(_target== TargetDetector.EmptyTarget)
         {
             damagable.OnDeath -= OnTargetDestroyed;
-            _target = null;
+            _target = TargetDetector.EmptyTarget;
             SetTarget(_detector.GetClosestTarget(_mainBody));
             return;
         }
         if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
         if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
-        _target = null;
+        _target = TargetDetector.EmptyTarget;
         SetTarget(_detector.GetClosestTarget(_mainBody));
     }
+    #endregion
     private void OnCorrupted(CorruptionComponent corruption)
     {
         _healthSystem.Heal((int)(_healthSystem.MaxHP * 0.3f));
         _spriteColor.ChangeColor(_corruptionColor.Color);
-        _target = null;
+        _target = TargetDetector.EmptyTarget;
         GetNewOriginaltarget(corruption);
         UpdateTargets();
     }
@@ -210,49 +215,73 @@ public class Monster : Unit
         _detector.UpdateTargetList();
         SetTarget(_detector.GetClosestTarget(_mainBody));
     }
-    private void OnDestroy()
-    {
-        _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
-        _listOfActiveUnits.RemoveGameobject(gameObject);
-    }
     public override void Death(IDamagable damagable)
     {
-        //Logger.Log($"{gameObject.name} has died");
-        if(_originalTarget != null) 
+        if (_originalTarget != TargetDetector.EmptyTarget)
         {
             if (_originalTarget.damagable != null) _originalTarget.damagable.OnDeath -= GetNewOriginaltarget;
             if (_originalTarget.corruptionComponent != null) _originalTarget.corruptionComponent.OnCorrupted.RemoveListener(GetNewOriginaltarget);
-            //Logger.Log($"{gameObject.name} Removed original target");
         }
-        if(_target != null) 
+        if (_target != TargetDetector.EmptyTarget)
         {
-            if(_target.tran!=null)
+            if (_target.tran != null)
             {
                 if (_target.damagable != null) _target.damagable.OnDeath -= OnTargetDestroyed;
                 if (_target.corruptionComponent != null) _target.corruptionComponent.OnCorrupted.RemoveListener(OnTargetCorrupted);
             }
-            //Logger.Log($"{gameObject.name} Removed target");
         }
         if (_corruptionComponent.IsCorrupted)
         {
             GameObject source = _audioSourcePool.GetSource();
             source.transform.position = _mainBody.position;
             _corruptedDieAudioEvent.Play(source.GetComponent<AudioSource>());
-        StartCoroutine(HelperClass.DelayedFunction(0.6f, () => base.Death(damagable)));
+            _corutineHolder.StartCoroutine(HelperClass.DelayedFunction(0.6f, () => { base.Death(damagable); _audioSourcePool.ReturnSource(source); }));
             gameObject.SetActive(false);
         }
         else
         {
             base.Death(damagable);
         }
-        
+
     }
     public override void ResetUnit()
     {
-       base.ResetUnit();
+        base.ResetUnit();
         _detector.OnTargetDetected.RemoveListener(SetTarget);
+        _detector.OnTargetLeft.RemoveListener(OnTargetLeftRange);
         _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
         _mainBody.transform.localPosition = Vector3.zero;
-      
+
+    }
+    private void OnDestroy()
+    {
+        _corruptionComponent.OnCorrupted.RemoveListener(OnCorrupted);
+        _listOfActiveUnits.RemoveGameobject(gameObject);
+    }
+
+}
+#if UNITY_EDITOR
+
+[CustomEditor(typeof(Monster))]
+public class MonsterEditor:Editor
+{
+
+    private void OnEnable()
+    {
+        
+    }
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        if (GUILayout.Button("Kill"))
+            {
+            if(Application.isPlaying) (target as Monster).Death((target as Monster).HealthSystem);
+        }
+        if(GUILayout.Button("Corrupt"))
+        {
+            if (Application.isPlaying) (target as Monster).Corrupt();
+        }
     }
 }
+
+#endif

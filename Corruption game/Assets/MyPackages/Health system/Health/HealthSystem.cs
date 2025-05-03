@@ -94,6 +94,7 @@ public class HealthSystem : MonoBehaviour,IDamagable
     }
     IEnumerator DamageInvincibilityCor()
     {
+        if (_invincibilityAfterHitDuration <= 0) yield break;
         _isInvincibleToDamage = true;
         yield return new WaitForSeconds(_invincibilityAfterHitDuration);
         _isInvincibleToDamage = false;

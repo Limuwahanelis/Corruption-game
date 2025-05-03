@@ -13,7 +13,7 @@ public class UnitPool : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        _unitPool = new ObjectPool<Unit>(CrateUnit, OnTakeUnitFromPool, OnReturnUnitToPool);
+        _unitPool = new ObjectPool<Unit>(CreateUnit, OnTakeUnitFromPool, OnReturnUnitToPool);
         _poolsList.AddPoolToList(this);
     }
     private void Start()
@@ -24,7 +24,7 @@ public class UnitPool : MonoBehaviour
     {
         return _unitPool.Get();
     }
-    Unit CrateUnit()
+    Unit CreateUnit()
     {
         Unit unit = Instantiate(_unitData.UnitPrefab);
         unit.SetPool(_unitPool);

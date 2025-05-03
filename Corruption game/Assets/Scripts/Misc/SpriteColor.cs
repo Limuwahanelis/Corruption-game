@@ -6,7 +6,7 @@ public class SpriteColor : MonoBehaviour
 {
     [SerializeField] SpriteRenderer _spriteRenderer;
     private Color _originalColor;
-    private void Start()
+    private void Awake()
     {
         _originalColor=_spriteRenderer.color;
     }

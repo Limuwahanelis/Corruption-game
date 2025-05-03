@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 public class TargetDetector : MonoBehaviour
 {
@@ -25,10 +27,15 @@ public class TargetDetector : MonoBehaviour
             if (corruptionComponent != null) corruptionComponent.IncreseCorruption(corruptionForce);
         }
     }
+
+    public UnityEvent<Target> OnTargetDetected;
+    public UnityEvent<Target> OnTargetLeft;
+    public static Target EmptyTarget => _emptyTarget;
+    static Target _emptyTarget = new Target();
     List<Target> targets= new List<Target>();
     List<Target> _allPossibletargets = new List<Target>();
-    public UnityEvent<Target> OnTargetDetected;
-    public UnityEvent OnTargetLeft;
+
+    // TODO: fix target acquistion on spawn and clear targets in TargetTedector.
     private void OnTriggerEnter2D(Collider2D collision)
     {
         IDamagable tmp = collision.attachedRigidbody.GetComponent<IDamagable>();
@@ -42,11 +49,11 @@ public class TargetDetector : MonoBehaviour
             damagable = tmp,
             name=collision.attachedRigidbody.name,
         };
-        if(factionAllegiance != null)
+        _allPossibletargets.Add(newtarget);
+        if (factionAllegiance != null)
         {
             newtarget.factionAllegiance = factionAllegiance;
         }
-        _allPossibletargets.Add(newtarget);
         if (factionAllegiance != null)
         {
             if (factionAllegiance.Allegiance == _factionAllegiance.Allegiance) return;
@@ -68,9 +75,25 @@ public class TargetDetector : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        IDamagable tmp = collision.attachedRigidbody.GetComponent<IDamagable>();
+        CorruptionComponent tmp2 = collision.attachedRigidbody.GetComponent<CorruptionComponent>();
+        FactionAllegiance factionAllegiance = collision.attachedRigidbody.GetComponent<FactionAllegiance>();
+
+        Target targetToremove = targets.Find(x => x.damagable == tmp || x.corruptionComponent == tmp2);
+        if(targetToremove != null) 
+        {
+            _allPossibletargets.Remove(targetToremove);
+            targets.Remove(targetToremove);
+            tmp.OnDeath -= RemoveTarget;
+            OnTargetLeft?.Invoke(targetToremove);
+        }
+    }
     public Target GetClosestTarget(Transform tran)
     {
-        if (targets.Count == 0) return null;
+        if (targets.Count == 0) return _emptyTarget;
         Target closestTarget = targets[0];
         float lowestDistance=Vector2.Distance(tran.position,closestTarget.tran.position);
         float dist = 0;
@@ -88,7 +111,7 @@ public class TargetDetector : MonoBehaviour
     public void UpdateTargetList()
     {
         targets.Clear();
-        for(int i=0;i<_allPossibletargets.Count;i++)
+        for(int i=0;i< _allPossibletargets.Count;i++)
         {
             if (_allPossibletargets[i].factionAllegiance==null || _allPossibletargets[i].factionAllegiance.Allegiance!=_factionAllegiance.Allegiance)
             {
@@ -104,6 +127,13 @@ public class TargetDetector : MonoBehaviour
             targets.Remove(tmp);
             tmp.damagable.OnDeath -= RemoveTarget;
         }
+        tmp = _allPossibletargets.Find(x => x.damagable == target);
+        if(tmp!=null) _allPossibletargets.Remove(tmp);
+    }
+    public void ClearAlltargets()
+    {
+        _allPossibletargets.Clear();
+        targets.Clear();
     }
     private void OnDestroy()
     {

@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - CorutineHolder
   layers:
   - Default
   - TransparentFX
@@ -15,8 +16,8 @@ TagManager:
   - Corruption
   - MouseSelect
   - Mouse
-  - 
-  - 
+  - Stencil 1
+  - Stencil 2
   - 
   - 
   - 

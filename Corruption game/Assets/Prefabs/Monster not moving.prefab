@@ -576,7 +576,7 @@ GameObject:
   - component: {fileID: 3912069690825569278}
   - component: {fileID: 5284015000013901391}
   m_Layer: 0
-  m_Name: Monster
+  m_Name: Monster not moving
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -632,6 +632,7 @@ MonoBehaviour:
   _rangeFromTarget: 2
   _spawnersList: {fileID: 11400000, guid: 01e984d2dc84d9441939255bfc7881db, type: 2}
   _movement: {fileID: 5284015000013901391}
+  _debug: 0
 --- !u!114 &1014495918979825475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -823,6 +824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b69d2bfa3fe828a45b8464736fd72d4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _stayInPlace: 1
   _mainBody: {fileID: 3430786072956781645}
   _obstacles: {fileID: 11400000, guid: 040b6539f03a1e04ebe69881346d902d, type: 2}
 --- !u!1 &8917799464437878468
